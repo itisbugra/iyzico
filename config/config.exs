@@ -20,6 +20,11 @@ use Mix.Config
 #
 #     config :logger, level: :info
 #
+config :iyzico,
+  locale: "tr",
+  api_key: nil,
+  api_secret: nil,
+  world: :sandbox
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment

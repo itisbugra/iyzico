@@ -9,9 +9,10 @@ defmodule Iyzico.Mixfile do
      start_permanent: Mix.env == :prod,
      deps: deps(),
      package: [
-       contributers: ["Buğra Ekuklu"],
+       name: :iyzico,
+       maintainers: ["Buğra Ekuklu"],
        licenses: ["MIT"],
-       links: %{github: "https://github.com/heybuybuddy/iyzico"}
+       links: %{github: "https://github.com/chatatata/iyzico"}
      ],
      description: """
      Elixir iyzico Client
@@ -36,6 +37,7 @@ defmodule Iyzico.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:poison, "~> 3.1"}]
+    [{:poison, "~> 3.1"},
+     {:luhn, "~> 0.3.1"}]
   end
 end
