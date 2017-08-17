@@ -7,7 +7,15 @@ defmodule Iyzico.Mixfile do
      elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps()]
+     deps: deps(),
+     package: [
+       contributers: ["Buğra Ekuklu"],
+       licenses: ["MIT"],
+       links: %{github: "https://github.com/heybuybuddy/iyzico"}
+     ],
+     description: """
+     Elixir iyzico Client
+     """]
   end
 
   # Configuration for the OTP application
@@ -28,6 +36,6 @@ defmodule Iyzico.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [{:poison, "~> 3.1"}]
   end
 end
