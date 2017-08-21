@@ -35,15 +35,15 @@ defmodule Iyzico.BasketItem do
 
     Map.put(basket_item, :valid?, result)
   end
+end
 
-  defmodule View do
-    def render_iolist(basket_item = %BasketItem{}) do
-      [{"id", basket_item.id},
-       {"price", basket_item.price},
-       {"name", basket_item.name},
-       {"category1", basket_item.category},
-       {"category2", basket_item.subcategory},
-       {"itemType", Atom.to_string(basket_item.type) |> String.upcase()}]
-    end
+defimpl Iyzico.IOListConvertible, for: Iyzico.BasketItem do
+  def to_iolist(data) do
+    [{"id", data.id},
+     {"price", data.price},
+     {"name", data.name},
+     {"category1", data.category},
+     {"category2", data.subcategory},
+     {"itemType", Atom.to_string(data.type) |> String.upcase()}]
   end
 end

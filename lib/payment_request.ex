@@ -67,25 +67,27 @@ defmodule Iyzico.PaymentRequest do
 
     Map.put(request, :valid?, result)
   end
+end
 
-  defmodule View do
-    @default_locale Application.get_env(:iyzico, Iyzico)[:locale]
+defimpl Iyzico.IOListConvertible, for: Iyzico.PaymentRequest do
+  @default_locale Application.get_env(:iyzico, Iyzico)[:locale]
 
-    def render_iolist(payment_request = %Iyzico.PaymentRequest{}) do
-      [{"locale", @default_locale},
-       {"conversationId", payment_request.conversation_id},
-       {"price", payment_request.price},
-       {"paidPrice", payment_request.paid_price},
-       {"installment", payment_request.installment},
-       {"paymentChannel", Atom.to_string(payment_request.payment_channel) |> String.upcase()},
-       {"paymentGroup", Atom.to_string(payment_request.payment_group) |> String.upcase()},
-       {"basketId", payment_request.basket_id},
-       {"paymentCard", Iyzico.Card.View.render_iolist(payment_request.payment_card)},
-       {"buyer", Iyzico.Buyer.View.render_iolist(payment_request.buyer)},
-       {"shippingAddress", Iyzico.Address.View.render_iolist(payment_request.shipping_address)},
-       {"billingAddress", Iyzico.Address.View.render_iolist(payment_request.billing_address)},
-       {"basketItems", Enum.map(payment_request.basket_items, &Iyzico.BasketItem.View.render_iolist/1)},
-       {"currency", Atom.to_string(payment_request.currency) |> String.upcase()}]
-    end
+  def to_iolist(data) do
+    [{"locale", @default_locale},
+     {"conversationId", data.conversation_id},
+     {"price", data.price},
+     {"paidPrice", data.paid_price},
+     {"installment", data.installment},
+     {"paymentChannel", Atom.to_string(data.payment_channel) |> String.upcase()},
+     {"basketId", data.basket_id},
+     {"paymentGroup", Atom.to_string(data.payment_group) |> String.upcase()},
+     {"paymentCard", Iyzico.IOListConvertible.to_iolist(data.payment_card)},
+     {"buyer", Iyzico.IOListConvertible.to_iolist(data.buyer)},
+     {"shippingAddress", Iyzico.IOListConvertible.to_iolist(data.shipping_address)},
+     {"billingAddress", Iyzico.IOListConvertible.to_iolist(data.billing_address)},
+     {"basketItems", Enum.map_reduce(data.basket_items, 0, fn (x, acc) ->
+       {{acc, Iyzico.IOListConvertible.to_iolist(x)}, acc + 1}
+     end) |> elem(0)},
+     {"currency", Atom.to_string(data.currency) |> String.upcase()}]
   end
 end

@@ -5,11 +5,7 @@ defmodule Iyzico.Iyzipay do
   Processes the given payment request on the remote API.
   """
   def process_payment_req(payment = %Iyzico.PaymentRequest{}) do
-    view = Iyzico.PaymentRequest.View.render_iolist(payment)
-
-    IO.inspect view
-
-    request([], :post, url_for_path("/payment/auth"), [], view)
+    request([], :post, url_for_path("/payment/auth"), [], payment)
   end
 
   @doc """

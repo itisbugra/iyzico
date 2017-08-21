@@ -1,18 +1,18 @@
 defmodule Iyzico.Auth do
   @doc false
 
-  @auth_header "authorization"
+  @auth_header "Authorization"
   @random_header "x-iyzi-rnd"
   @client_version_header "x-iyzi-client-version"
   @auth_header_prefix "IYZWS"
   @client_title "iyzico Elixir Client"
   @client_version Mix.Project.config()[:version]
-  @rand_string_size 8
+  @rand_string_size 13
 
   def gen_headers(serialized_body) do
     api_key = Application.get_env(:iyzico, Iyzico)[:api_key]
     api_secret = Application.get_env(:iyzico, Iyzico)[:api_secret]
-    rand_string = "#{system_time()}" <> gen_rand_string(@rand_string_size)
+    rand_string = gen_rand_string(@rand_string_size)
 
     [gen_auth_header(rand_string, api_key, api_secret, serialized_body),
      gen_rand_string_header(rand_string),
@@ -40,12 +40,10 @@ defmodule Iyzico.Auth do
   end
 
   defp gen_digest(rand_string, api_key, api_secret, serialized_body) do
-    substrate = api_key <> rand_string <> api_secret <> "[" <> serialized_body <> "]"
+    substrate = api_key <> rand_string <> api_secret <> serialized_body
 
     :crypto.hash(:sha, substrate)
   end
-
-  defp system_time(), do: round(:erlang.system_time() / 1_000_000)
 
   # ref: https://stackoverflow.com/questions/32001606/how-to-generate-a-random-url-safe-string-with-elixir
   defp gen_rand_string(length), do: :crypto.strong_rand_bytes(length) |> Base.url_encode64 |> binary_part(0, length)

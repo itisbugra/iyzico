@@ -9,7 +9,8 @@ defmodule Iyzico.Card do
     :number,
     :exp_year,
     :exp_month,
-    :cvc
+    :cvc,
+    :register?
   ]
 
   @type t :: %__MODULE__{
@@ -17,7 +18,8 @@ defmodule Iyzico.Card do
     number: binary,
     exp_year: integer,
     exp_month: integer,
-    cvc: integer
+    cvc: integer,
+    register?: integer
   }
 
   def create_card(card = %Iyzico.Card{}) do
@@ -66,14 +68,15 @@ defmodule Iyzico.Card do
   defp validate_cvc(cvc) when is_integer(cvc) do
     cvc >= 100 and cvc < 1000
   end
+end
 
-  defmodule View do
-    def render_iolist(card = %Iyzico.Card{}) do
-      [{"cardHolder", card.holder_name},
-       {"cardNumber", card.number},
-       {"expireYear", card.exp_year},
-       {"expireMonth", card.exp_month},
-       {"cvc", card.cvc}]
-    end
+defimpl Iyzico.IOListConvertible, for: Iyzico.Card do
+  def to_iolist(data) do
+    [{"cardHolderName", data.holder_name},
+     {"cardNumber", data.number},
+     {"expireYear", data.exp_year},
+     {"expireMonth", data.exp_month},
+     {"cvc", data.cvc},
+     {"registerCard", data.register?}]
   end
 end

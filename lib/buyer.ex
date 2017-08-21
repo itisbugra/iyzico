@@ -46,22 +46,22 @@ defmodule Iyzico.Buyer do
 
     Map.put(buyer, :valid?, result)
   end
+end
 
-  defmodule View do
-    def render_iolist(buyer = %Iyzico.Buyer{}) do
-      [{"id", buyer.id},
-       {"name", buyer.name},
-       {"surname", buyer.surname},
-       {"identityNumber", buyer.identity_number},
-       {"email", buyer.email},
-       {"gsmNumber", buyer.phone_number},
-       {"registrationDate", buyer.registration_date},
-       {"lastLoginDate", buyer.last_login_date},
-       {"registrationAddress", buyer.registration_address},
-       {"city", buyer.city},
-       {"country", buyer.country},
-       {"zipCode", buyer.zip_code},
-       {"ip", Tuple.to_list(buyer.ip) |> Enum.join(".")}]
-    end
+defimpl Iyzico.IOListConvertible, for: Iyzico.Buyer do
+  def to_iolist(data) do
+    [{"id", data.id},
+     {"name", data.name},
+     {"surname", data.surname},
+     {"identityNumber", data.identity_number},
+     {"email", data.email},
+     {"gsmNumber", data.phone_number},
+     {"registrationDate", data.registration_date},
+     {"lastLoginDate", data.last_login_date},
+     {"registrationAddress", data.registration_address},
+     {"city", data.city},
+     {"country", data.country},
+     {"zipCode", data.zip_code},
+     {"ip", data.ip}]
   end
 end

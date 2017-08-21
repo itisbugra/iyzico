@@ -11,9 +11,11 @@ defmodule Iyzico.EndpointCase do
 
   defmacro assert_resp_success(resp) do
     quote do
-      assert unquote(resp)["status"] == "success"
+      result = unquote(resp)
 
-      unquote(resp)
+      assert result["status"] == "success"
+
+      result
     end
   end
 end

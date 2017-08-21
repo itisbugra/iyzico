@@ -32,16 +32,16 @@ defmodule Iyzico.Client do
   def request(conf, method, url, headers, body) when is_atom(method) and is_binary(url) do
     url = String.to_char_list(url)
     opts = conf[:httpc_opts] || []
-    serialized_body = serialize(body)
-    IO.inspect serialized_body
-    headers = headers ++ gen_headers(serialized_body)
 
     case method do
       :get ->
+        headers = headers ++ gen_headers("")
         :httpc.request(:get, {url, headers}, opts, body_format: :binary)
       _ ->
-        headers = headers ++ [{'Content-Type', 'application/json'}]
-        :httpc.request(method, {url, headers, 'application/json', Poison.encode!(body)}, opts, body_format: :binary)
+        serialized_body = serialize(Iyzico.IOListConvertible.to_iolist(body))
+        json_body = to_json(Iyzico.IOListConvertible.to_iolist(body))
+        headers = headers ++ gen_headers(serialized_body) ++ [{'Content-Type', 'application/json'}]
+        :httpc.request(method, {url, headers, 'application/json', json_body}, opts, body_format: :binary)
     end
     |> normalize_response
   end

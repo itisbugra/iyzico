@@ -27,7 +27,8 @@ defmodule IyzicoTest do
         number: "5528790000000008",
         exp_month: 12,
         exp_year: 2030,
-        cvc: 123
+        cvc: 123,
+        register?: 0
       }
 
     buyer =
@@ -36,15 +37,15 @@ defmodule IyzicoTest do
         name: "John",
         surname: "Doe",
         phone_number: "+905350000000",
-        identity_number: "1111111111111",
-        email: "mail@exchange.com",
+        identity_number: "74300864791",
+        email: "email@email.com",
         last_login_date: "2015-10-05 12:43:35",
         registration_date: "2013-04-21 15:12:09",
         registration_address: "Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1",
         city: "Istanbul",
         country: "Turkey",
         zip_code: "34732",
-        ip: {85, 34, 78, 112}
+        ip: "85.34.78.112"
       }
 
     shipping_address =
@@ -75,12 +76,22 @@ defmodule IyzicoTest do
         price: "0.3"
       }
 
+    game_item =
+      %BasketItem{
+        id: "BI103",
+        name: "USB",
+        category: "Electronics",
+        subcategory: "USB / Cable",
+        type: :physical,
+        price: "0.2"
+      }
+
     payment_request =
       %PaymentRequest{
         locale: @current_locale,
         conversation_id: "123456789",
-        price: "1.0",
-        paid_price: "1.1",
+        price: "0.5",
+        paid_price: "0.7",
         currency: :try,
         basket_id: "B67832",
         payment_channel: :web,
@@ -91,10 +102,11 @@ defmodule IyzicoTest do
         shipping_address: shipping_address,
         billing_address: billing_address,
         basket_items: [
-          binocular_item
+          binocular_item,
+          game_item
         ]
       }
 
-    IO.inspect Iyzico.Iyzipay.process_payment_req!(payment_request)
+    assert_resp_success Iyzico.Iyzipay.process_payment_req!(payment_request)
   end
 end

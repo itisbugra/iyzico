@@ -29,14 +29,14 @@ defmodule Iyzico.Address do
 
     Map.put(address, :valid?, result)
   end
+end
 
-  defmodule View do
-    def render_iolist(address = %Iyzico.Address{}) do
-      [{"address", address.address},
-       {"zipCode", address.zip_code},
-       {"contactName", address.contact_name},
-       {"city", address.city},
-       {"country", address.country}]
-    end
+defimpl Iyzico.IOListConvertible, for: Iyzico.Address do
+  def to_iolist(data) do
+    [{"address", data.address},
+     {"zipCode", data.zip_code},
+     {"contactName", data.contact_name},
+     {"city", data.city},
+     {"country", data.country}]
   end
 end
