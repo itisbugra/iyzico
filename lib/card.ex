@@ -20,37 +20,37 @@ defmodule Iyzico.Card do
     cvc: integer
   }
 
-  def put_holder_name(card = %t{}, name) when is_binary(name) do
-    card
-    |> Map.put(:holder_name, name)
-    |> validate_struct()
+  def create_card(card = %Iyzico.Card{}) do
+
   end
 
-  def put_number(card = %t{}, number) when is_binary(number) do
-    card
-    |> Map.put(:number, number)
-    |> validate_struct()
+  @doc """
+  Invalidates a registration of given card.
+  """
+  @spec delete_card(Iyzico.Card.t) ::
+    :ok |
+    {:error, :not_found}
+  def delete_card(card = %Iyzico.Card{}) do
+
   end
 
-  def put_exp_year(card = %t{}, year) when is_integer(year) do
-    card
-    |> Map.put(:year, year)
-    |> validate_struct()
+  @doc """
+  Same as `delete_card/1` but raises `Iyzico.CardNotRegistered` error if card is not registered.
+  """
+  @spec delete_card!(Iyzico.Card.t) :: no_return
+  def delete_card!(card = %Iyzico.Card{}) do
+
   end
 
-  def put_exp_month(card = %t{}, month) when is_integer(month) do
-    card
-    |> Map.put(:exp_month, month)
-    |> validate_struct()
+  @doc """
+  Retrieves all cards of a user.
+  """
+  @spec retrieve_cards() :: list
+  def retrieve_cards() do
+
   end
 
-  def put_cvc(card = %t{}, cvc) when is_number(cvc) do
-    card
-    |> Map.put(:cvc, cvc)
-    |> validate_struct()
-  end
-
-  defp validate_struct(card = %t{}) do
+  defp validate_struct(card = %Iyzico.Card{}) do
     result =
       Enum.reduce(Map.keys(card), fn(key, acc) ->
         not is_nil(Map.fetch(card, key))
@@ -65,5 +65,15 @@ defmodule Iyzico.Card do
 
   defp validate_cvc(cvc) when is_integer(cvc) do
     cvc >= 100 and cvc < 1000
+  end
+
+  defmodule View do
+    def render_iolist(card = %Iyzico.Card{}) do
+      [{"cardHolder", card.holder_name},
+       {"cardNumber", card.number},
+       {"expireYear", card.exp_year},
+       {"expireMonth", card.exp_month},
+       {"cvc", card.cvc}]
+    end
   end
 end

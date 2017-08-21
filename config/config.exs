@@ -20,11 +20,12 @@ use Mix.Config
 #
 #     config :logger, level: :info
 #
-config :iyzico,
-  locale: "tr",
-  api_key: nil,
-  api_secret: nil,
-  world: :sandbox
+config :iyzico, Iyzico,
+  locale: "en",
+  api_key: "sandbox-kChKrFYKEKi8mDerYiV1CRQQYXh2xfua",
+  api_secret: "sandbox-ReTwEy0es39mNZtFvBgMxEChxzHC3fDT",
+  world: :sandbox,
+  base_url: "https://sandbox-api.iyzipay.com"
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment

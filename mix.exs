@@ -5,6 +5,7 @@ defmodule Iyzico.Mixfile do
     [app: :iyzico,
      version: "0.1.0",
      elixir: "~> 1.4",
+     elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps(),
@@ -18,6 +19,10 @@ defmodule Iyzico.Mixfile do
      Elixir iyzico Client
      """]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(:dev), do: ["lib", "docs"]
+  defp elixirc_paths(_),     do: ["lib"]
 
   # Configuration for the OTP application
   #
@@ -38,6 +43,7 @@ defmodule Iyzico.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:poison, "~> 3.1"},
-     {:luhn, "~> 0.3.1"}]
+     {:luhn, "~> 0.3.1"},
+     {:ex_doc, ">= 0.0.0", only: :dev}]
   end
 end
