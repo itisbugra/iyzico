@@ -1,5 +1,5 @@
 defmodule Iyzico.Card do
-  @moduledoc """
+  @typedoc """
   Represents a card to perform the checkout.
   """
 
@@ -52,13 +52,8 @@ defmodule Iyzico.Card do
 
   end
 
-  defp validate_struct(card = %Iyzico.Card{}) do
-    result =
-      Enum.reduce(Map.keys(card), fn(key, acc) ->
-        not is_nil(Map.fetch(card, key))
-      end)
+  def valid?(card = %Iyzico.Card{}) do
 
-    Map.put(card, :valid?, result)
   end
 
   defp validate_number(number) when is_binary(number) do

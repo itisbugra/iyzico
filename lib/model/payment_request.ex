@@ -1,5 +1,5 @@
 defmodule Iyzico.PaymentRequest do
-  @moduledoc """
+  @typedoc """
   Represents a payment request information.
   """
   @enforce_keys ~w(conversation_id price
@@ -45,8 +45,6 @@ defmodule Iyzico.PaymentRequest do
     basket_items: list
   }
 
-  import Iyzico.Client
-
   def retrieve_installment() do
 
   end
@@ -57,15 +55,6 @@ defmodule Iyzico.PaymentRequest do
 
   def fetch_payment_result() do
 
-  end
-
-  defp validate_struct(request = %Iyzico.PaymentRequest{}) do
-    result =
-      Enum.reduce(Map.keys(request), fn(key, acc) ->
-        acc and (not is_nil(Map.fetch(request, key)))
-      end)
-
-    Map.put(request, :valid?, result)
   end
 end
 

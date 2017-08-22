@@ -5,8 +5,6 @@ defmodule Iyzico.Client do
   import Iyzico.Auth
   import Iyzico.Serialization
 
-  alias Iyzico.PaymentRequest
-
   @base_url Application.get_env(:iyzico, Iyzico)[:base_url]
 
   def test_remote_host() do
@@ -30,7 +28,7 @@ defmodule Iyzico.Client do
   def url_for_path(path), do: @base_url <> path
 
   def request(conf, method, url, headers, body) when is_atom(method) and is_binary(url) do
-    url = String.to_char_list(url)
+    url = String.to_charlist(url)
     opts = conf[:httpc_opts] || []
 
     case method do

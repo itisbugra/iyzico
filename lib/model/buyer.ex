@@ -1,5 +1,5 @@
 defmodule Iyzico.Buyer do
-  @moduledoc """
+  @typedoc """
   Represents a peer party of a transactional operation.
   """
   @enforce_keys ~w(id name surname identity_number
@@ -37,15 +37,6 @@ defmodule Iyzico.Buyer do
     zip_code: binary,
     ip: tuple
   }
-
-  defp validate_struct(buyer = %Iyzico.Buyer{}) do
-    result =
-      Enum.reduce(Map.keys(buyer), fn (key, acc) ->
-        not is_nil(Map.fetch(buyer, key))
-      end)
-
-    Map.put(buyer, :valid?, result)
-  end
 end
 
 defimpl Iyzico.IOListConvertible, for: Iyzico.Buyer do

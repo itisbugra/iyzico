@@ -1,5 +1,5 @@
 defmodule Iyzico.Address do
-  @moduledoc """
+  @typedoc """
   Represents an address belonging to stakeholders of a payment (i.e. buyer, seller).
   """
   @enforce_keys ~w(address zip_code contact_name city country)a
@@ -8,8 +8,7 @@ defmodule Iyzico.Address do
     :zip_code,
     :contact_name,
     :city,
-    :country,
-    :valid?
+    :country
   ]
 
   @type t :: %__MODULE__{
@@ -17,18 +16,8 @@ defmodule Iyzico.Address do
     zip_code: binary,
     contact_name: binary,
     city: binary,
-    country: binary,
-    valid?: boolean
+    country: binary
   }
-
-  defp validate_struct(address = %Iyzico.Address{}) do
-    result =
-      Enum.reduce(Map.keys(address), fn (key, acc) ->
-        not is_nil(Map.fetch(address, key))
-      end)
-
-    Map.put(address, :valid?, result)
-  end
 end
 
 defimpl Iyzico.IOListConvertible, for: Iyzico.Address do

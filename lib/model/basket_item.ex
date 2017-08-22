@@ -1,5 +1,5 @@
 defmodule Iyzico.BasketItem do
-  @moduledoc """
+  @typedoc """
   Represents an item on a basket.
   """
   @enforce_keys ~w(id price name category subcategory type)a
@@ -9,8 +9,7 @@ defmodule Iyzico.BasketItem do
     :name,
     :category,
     :subcategory,
-    :type,
-    :valid?
+    :type
   ]
 
   @type type :: :physical | :virtual
@@ -21,20 +20,8 @@ defmodule Iyzico.BasketItem do
     name: binary,
     category: binary,
     subcategory: binary,
-    type: type,
-    valid?: boolean
+    type: type
   }
-
-  alias Iyzico.BasketItem
-
-  defp validate_struct(basket_item = %BasketItem{}) do
-    result =
-      Enum.reduce(Map.keys(basket_item), fn(key, acc) ->
-        acc and (not is_nil(Map.fetch(basket_item, key)))
-      end)
-
-    Map.put(basket_item, :valid?, result)
-  end
 end
 
 defimpl Iyzico.IOListConvertible, for: Iyzico.BasketItem do

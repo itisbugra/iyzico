@@ -107,6 +107,8 @@ defmodule IyzicoTest do
         ]
       }
 
-    assert_resp_success Iyzico.Iyzipay.process_payment_req!(payment_request)
+    {:ok, _payment, metadata} = Iyzico.Iyzipay.process_payment_req(payment_request)
+
+    assert metadata.succeed?
   end
 end
