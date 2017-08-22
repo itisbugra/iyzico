@@ -58,17 +58,19 @@ defmodule Iyzico.Transaction do
   @doc """
   Converts an integer constant to corresponding transaction status as an atom.
 
-    iex> Iyzico.Transaction.to_transaction_status(-1)
-    :rejected
+  ## Examples
 
-    iex> Iyzico.Transaction.to_transaction_status(0)
-    :on_hold
+      iex> Iyzico.Transaction.to_transaction_status(-1)
+      :rejected
 
-    iex> Iyzico.Transaction.to_transaction_status(1)
-    :on_market
+      iex> Iyzico.Transaction.to_transaction_status(0)
+      :on_hold
 
-    iex> Iyzico.Transaction.to_transaction_status(2)
-    :ok
+      iex> Iyzico.Transaction.to_transaction_status(1)
+      :on_market
+
+      iex> Iyzico.Transaction.to_transaction_status(2)
+      :ok
   """
   @spec to_transaction_status(integer) :: transaction_status
   def to_transaction_status(status) do

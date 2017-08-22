@@ -58,17 +58,19 @@ defmodule Iyzico.Payment do
   @doc """
   Converts a card association string into existing atom.
 
-    iex> Iyzico.Payment.get_card_assoc "MASTER_CARD"
-    :mastercard
+  ## Examples
 
-    iex> Iyzico.Payment.get_card_assoc "VISA"
-    :visa
+      iex> Iyzico.Payment.get_card_assoc "MASTER_CARD"
+      :mastercard
 
-    iex> Iyzico.Payment.get_card_assoc "AMERICAN_EXPRESS"
-    :amex
+      iex> Iyzico.Payment.get_card_assoc "VISA"
+      :visa
 
-    iex> Iyzico.Payment.get_card_assoc "TROY"
-    :troy
+      iex> Iyzico.Payment.get_card_assoc "AMERICAN_EXPRESS"
+      :amex
+
+      iex> Iyzico.Payment.get_card_assoc "TROY"
+      :troy
   """
   @spec get_card_assoc(String.t) :: card_assoc
   def get_card_assoc(assoc) do
@@ -87,14 +89,16 @@ defmodule Iyzico.Payment do
   @doc """
   Converts a card type string into existing atom.
 
-    iex> Iyzico.Payment.get_card_type "CREDIT_CARD"
-    :credit
+  ## Examples
 
-    iex> Iyzico.Payment.get_card_type "DEBIT_CARD"
-    :debit
+      iex> Iyzico.Payment.get_card_type "CREDIT_CARD"
+      :credit
 
-    iex> Iyzico.Payment.get_card_type "PREPAID_CARD"
-    :prepaid
+      iex> Iyzico.Payment.get_card_type "DEBIT_CARD"
+      :debit
+
+      iex> Iyzico.Payment.get_card_type "PREPAID_CARD"
+      :prepaid
   """
   @spec get_card_type(String.t) :: card_type
   def get_card_type(type) do
@@ -111,26 +115,28 @@ defmodule Iyzico.Payment do
   @doc """
   Converts given card family string to existing atom.
 
-    iex> Iyzico.Payment.get_card_family "Bonus"
-    :bonus
+  ## Examples
 
-    iex> Iyzico.Payment.get_card_family "Axess"
-    :axess
+      iex> Iyzico.Payment.get_card_family "Bonus"
+      :bonus
 
-    iex> Iyzico.Payment.get_card_family "World"
-    :world
+      iex> Iyzico.Payment.get_card_family "Axess"
+      :axess
 
-    iex> Iyzico.Payment.get_card_family "Maximum"
-    :maximum
+      iex> Iyzico.Payment.get_card_family "World"
+      :world
 
-    iex> Iyzico.Payment.get_card_family "Paraf"
-    :paraf
+      iex> Iyzico.Payment.get_card_family "Maximum"
+      :maximum
 
-    iex> Iyzico.Payment.get_card_family "CardFinans"
-    :cardfinans
+      iex> Iyzico.Payment.get_card_family "Paraf"
+      :paraf
 
-    iex> Iyzico.Payment.get_card_family "Advantage"
-    :advantage
+      iex> Iyzico.Payment.get_card_family "CardFinans"
+      :cardfinans
+
+      iex> Iyzico.Payment.get_card_family "Advantage"
+      :advantage
   """
   @spec get_card_family(String.t) :: card_family
   def get_card_family(family) do
@@ -155,19 +161,22 @@ defmodule Iyzico.Payment do
   @doc """
   Converts a given integer representation of a fraud status of a payment to respective type.
 
-  # Discussion
+  ## Discussion
+
   A merchant should only proceed to the transaction if and only if the fraud status is `:ok`.
   A payments fraud status would be `:awaiting` if transaction safety is being processed in present.
   Transactions with fraud status with `:restrict` value should be avoided.
 
-    iex> Iyzico.Payment.to_fraud_status -1
-    :restrict
+  ## Examples
 
-    iex> Iyzico.Payment.to_fraud_status 0
-    :awaiting
+      iex> Iyzico.Payment.to_fraud_status -1
+      :restrict
 
-    iex> Iyzico.Payment.to_fraud_status 1
-    :ok
+      iex> Iyzico.Payment.to_fraud_status 0
+      :awaiting
+
+      iex> Iyzico.Payment.to_fraud_status 1
+      :ok
   """
   @spec to_fraud_status(integer) :: fraud_status
   def to_fraud_status(status) do
