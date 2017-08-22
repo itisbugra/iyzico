@@ -9,6 +9,7 @@ defmodule Iyzico.Mixfile do
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps(),
+     test_coverage: [tool: ExCoveralls],
      package: [
        name: :iyzico,
        maintainers: ["Buğra Ekuklu"],
@@ -44,6 +45,7 @@ defmodule Iyzico.Mixfile do
   defp deps do
     [{:poison, "~> 3.1"},
      {:luhn, "~> 0.3.1"},
-     {:ex_doc, ">= 0.0.0", only: :dev}]
+     {:ex_doc, ">= 0.0.0", only: :dev},
+     {:excoveralls, "~> 0.7.2", only: :test}]
   end
 end
