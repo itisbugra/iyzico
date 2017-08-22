@@ -58,16 +58,16 @@ defmodule Iyzico.Payment do
   @doc """
   Converts a card association string into existing atom.
 
-    iex> get_card_assoc "MASTER_CARD"
+    iex> Iyzico.Payment.get_card_assoc "MASTER_CARD"
     :mastercard
 
-    iex> get_card_assoc "VISA"
+    iex> Iyzico.Payment.get_card_assoc "VISA"
     :visa
 
-    iex> get_card_assoc "AMERICAN_EXPRESS"
+    iex> Iyzico.Payment.get_card_assoc "AMERICAN_EXPRESS"
     :amex
 
-    iex> get_card_assoc "TROY"
+    iex> Iyzico.Payment.get_card_assoc "TROY"
     :troy
   """
   @spec get_card_assoc(String.t) :: card_assoc
@@ -87,13 +87,13 @@ defmodule Iyzico.Payment do
   @doc """
   Converts a card type string into existing atom.
 
-    iex> get_card_type "CREDIT_CARD"
+    iex> Iyzico.Payment.get_card_type "CREDIT_CARD"
     :credit
 
-    iex> get_card_type "DEBIT_CARD"
+    iex> Iyzico.Payment.get_card_type "DEBIT_CARD"
     :debit
 
-    iex> get_card_type "PREPAID_CARD"
+    iex> Iyzico.Payment.get_card_type "PREPAID_CARD"
     :prepaid
   """
   @spec get_card_type(String.t) :: card_type
@@ -111,25 +111,25 @@ defmodule Iyzico.Payment do
   @doc """
   Converts given card family string to existing atom.
 
-    iex> get_card_family "Bonus"
+    iex> Iyzico.Payment.get_card_family "Bonus"
     :bonus
 
-    iex> get_card_family "Axess"
+    iex> Iyzico.Payment.get_card_family "Axess"
     :axess
 
-    iex> get_card_family "World"
+    iex> Iyzico.Payment.get_card_family "World"
     :world
 
-    iex> get_card_family "Maximum"
+    iex> Iyzico.Payment.get_card_family "Maximum"
     :maximum
 
-    iex> get_card_family "Paraf"
+    iex> Iyzico.Payment.get_card_family "Paraf"
     :paraf
 
-    iex> get_card_family "CardFinans"
+    iex> Iyzico.Payment.get_card_family "CardFinans"
     :cardfinans
 
-    iex> get_card_family "Advantage"
+    iex> Iyzico.Payment.get_card_family "Advantage"
     :advantage
   """
   @spec get_card_family(String.t) :: card_family
@@ -160,13 +160,13 @@ defmodule Iyzico.Payment do
   A payments fraud status would be `:awaiting` if transaction safety is being processed in present.
   Transactions with fraud status with `:restrict` value should be avoided.
 
-    iex> to_fraud_status -1
+    iex> Iyzico.Payment.to_fraud_status -1
     :restrict
 
-    iex> to_fraud_status 0
+    iex> Iyzico.Payment.to_fraud_status 0
     :awaiting
 
-    iex> to_fraud_status 1
+    iex> Iyzico.Payment.to_fraud_status 1
     :ok
   """
   @spec to_fraud_status(integer) :: fraud_status

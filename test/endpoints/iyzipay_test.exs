@@ -1,6 +1,6 @@
-defmodule IyzicoTest do
+defmodule Iyzico.IyzipayTest do
   use Iyzico.EndpointCase
-  doctest Iyzico
+  doctest Iyzico.Iyzipay
 
   import Iyzico.Client
 

@@ -44,18 +44,6 @@ defmodule Iyzico.PaymentRequest do
     billing_address: Iyzico.Address.t,
     basket_items: list
   }
-
-  def retrieve_installment() do
-
-  end
-
-  def retrieve_bin(bin) do
-
-  end
-
-  def fetch_payment_result() do
-
-  end
 end
 
 defimpl Iyzico.IOListConvertible, for: Iyzico.PaymentRequest do
