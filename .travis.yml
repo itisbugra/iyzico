@@ -5,8 +5,6 @@ elixir:
 otp_release:
   - 20.0
 sudo: required
-before_script:
-  - MIX_ENV=test mix ecto.setup
 install:
   - mix local.hex --force
   - mix local.rebar --force
