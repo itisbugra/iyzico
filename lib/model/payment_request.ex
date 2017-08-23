@@ -47,7 +47,7 @@ defmodule Iyzico.PaymentRequest do
 end
 
 defimpl Iyzico.IOListConvertible, for: Iyzico.PaymentRequest do
-  @default_locale Application.get_env(:iyzico, Iyzico)[:locale]
+  @default_locale Keyword.get(Application.get_env(:iyzico, Iyzico), :locale, "en")
 
   def to_iolist(data) do
     [{"locale", @default_locale},

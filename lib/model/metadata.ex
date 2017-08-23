@@ -3,7 +3,7 @@ defmodule Iyzico.Metadata do
   Provides metadata of a response from server.
   """
 
-  @enforce_fields ~w(system_time succeed? phase locale auth_code)a
+  @enforce_fields ~w(system_time succeed? locale)a
 
   defstruct [
     :system_time,

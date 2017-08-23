@@ -22,8 +22,8 @@ use Mix.Config
 #
 config :iyzico, Iyzico,
   locale: "tr",
-  api_key: nil,
-  api_secret: nil,
+  api_key: "sandbox-qO7nc7SfZobKsgQq81r518pEnfg6FJQE",
+  api_secret: "sandbox-OFVrJ1h8QM8xq8BMTKBiZUa92JcD2B8g",
   world: :sandbox,
   base_url: "https://sandbox-api.iyzipay.com"
 

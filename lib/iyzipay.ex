@@ -5,13 +5,15 @@ defmodule Iyzico.Iyzipay do
   alias Iyzico.Transaction
   alias Iyzico.ConvertedPayout
   alias Iyzico.Metadata
+  alias Iyzico.Card
+  alias Iyzico.CardReference
 
   @doc """
   Processes the given payment request on the remote API.
   """
   def process_payment_req(payment_request = %Iyzico.PaymentRequest{}, opts \\ []) do
     callback_url = Keyword.get(opts, :secure_callback_url)
-    payment_request = Map.put(payment_request, :callback_url, callback_url)
+    payment_request = put_callback_url(payment_request, callback_url)
 
     {url, payment_request} =
       if is_nil(callback_url) do
@@ -58,33 +60,38 @@ defmodule Iyzico.Iyzipay do
             end)
 
         payment =
-            %Payment{
-              basket_id: resp["basketId"],
-              bin_id: resp["binNumber"],
-              card_assoc: Payment.get_card_assoc(resp["cardAssociation"]),
-              card_family: Payment.get_card_family(resp["cardFamily"]),
-              card_type: Payment.get_card_type(resp["cardType"]),
-              conversation_id: resp["conversationId"],
-              currency: resp["currency"] |> String.downcase() |> String.to_atom(),
-              fraud_status: Payment.to_fraud_status(resp["fraudStatus"]),
-              installment: resp["installment"],
-              transactions: transactions,
-              commission_fee: resp["iyziCommissionFee"],
-              commission_amount: resp["iyziCommissionRateAmount"],
-              last_four_digits: resp["lastFourDigits"],
-              merchant_commission_rate: resp["merchantCommissionRate"],
-              merchant_commission_amount: resp["merchantCommissionRateAmount"],
-              paid_price: resp["paidPrice"],
-              price: resp["price"],
-              id: resp["paymentId"]}
+          %Payment{
+            basket_id: resp["basketId"],
+            bin_id: resp["binNumber"],
+            card_ref: %CardReference{
+              assoc: Card.get_card_assoc(resp["cardAssociation"]),
+              family: Card.get_card_family(resp["cardFamily"]),
+              type: Card.get_card_type(resp["cardType"]),
+              alias: payment_request.payment_card.registration_alias,
+              user_key: resp["cardUserKey"],
+              token: resp["cardToken"]
+            },
+            conversation_id: resp["conversationId"],
+            currency: resp["currency"] |> String.downcase() |> String.to_atom(),
+            fraud_status: Payment.to_fraud_status(resp["fraudStatus"]),
+            installment: resp["installment"],
+            transactions: transactions,
+            commission_fee: resp["iyziCommissionFee"],
+            commission_amount: resp["iyziCommissionRateAmount"],
+            last_four_digits: resp["lastFourDigits"],
+            merchant_commission_rate: resp["merchantCommissionRate"],
+            merchant_commission_amount: resp["merchantCommissionRateAmount"],
+            paid_price: resp["paidPrice"],
+            price: resp["price"],
+            id: resp["paymentId"]}
 
         metadata =
-            %Metadata{
-              system_time: resp["systemTime"],
-              succeed?: resp["status"] == "success",
-              phase: resp["phase"],
-              locale: resp["locale"],
-              auth_code: resp["authCode"]}
+          %Metadata{
+            system_time: resp["systemTime"],
+            succeed?: resp["status"] == "success",
+            phase: resp["phase"],
+            locale: resp["locale"],
+            auth_code: resp["authCode"]}
 
         {:ok, payment, metadata}
       any ->
@@ -102,6 +109,14 @@ defmodule Iyzico.Iyzipay do
         {payment, metadata}
       {:error, code} ->
         raise Iyzico.PaymentProcessingError, code: code
+    end
+  end
+
+  defp put_callback_url(payment_request, callback_url) do
+    if not is_nil(callback_url) do
+      Map.put(payment_request, :callback_url, callback_url)
+    else
+      payment_request
     end
   end
 end

@@ -1,6 +1,8 @@
 defmodule Iyzico.Auth do
   @doc false
 
+  import Iyzico.CompileTime
+
   @auth_header "Authorization"
   @random_header "x-iyzi-rnd"
   @client_version_header "x-iyzi-client-version"
@@ -8,6 +10,11 @@ defmodule Iyzico.Auth do
   @client_title "iyzico Elixir Client"
   @client_version Mix.Project.config()[:version]
   @rand_string_size 13
+  @api_key Application.get_env(:iyzico, Iyzico)[:api_key]
+  @api_secret Application.get_env(:iyzico, Iyzico)[:api_secret]
+
+  static_assert_binary(@api_key, message: "API key should exist.")
+  static_assert_binary(@api_secret, message: "API secret should exist.")
 
   def gen_headers(serialized_body) do
     api_key = Application.get_env(:iyzico, Iyzico)[:api_key]

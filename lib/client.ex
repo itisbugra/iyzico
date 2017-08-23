@@ -5,7 +5,11 @@ defmodule Iyzico.Client do
   import Iyzico.Auth
   import Iyzico.Serialization
 
+  import Iyzico.CompileTime
+
   @base_url Application.get_env(:iyzico, Iyzico)[:base_url]
+
+  static_assert_binary(@base_url)
 
   def test_remote_host() do
     case request([], :get, url_for_path("/payment/test"), [], nil) do
@@ -38,6 +42,7 @@ defmodule Iyzico.Client do
       _ ->
         serialized_body = serialize(Iyzico.IOListConvertible.to_iolist(body))
         json_body = to_json(Iyzico.IOListConvertible.to_iolist(body))
+
         headers = headers ++ gen_headers(serialized_body) ++ [{'Content-Type', 'application/json'}]
         :httpc.request(method, {url, headers, 'application/json', json_body}, opts, body_format: :binary)
     end
