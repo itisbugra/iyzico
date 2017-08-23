@@ -1,8 +1,20 @@
+dist: trusty
 language: elixir
 elixir:
-  - 1.5.0
   - 1.5.1
 otp_release:
-  - 20
+  - 20.0
+sudo: required
+before_script:
+  - MIX_ENV=test mix ecto.setup
+install:
+  - mix local.hex --force
+  - mix local.rebar --force
+  - mix deps.get
+  - MIX_ENV=test mix deps.compile
 script:
-  - "MIX_ENV=test mix do deps.get, test && mix compile && mix coveralls.travis"
+  - mix test
+notifications:
+  recipients:
+    - ekuklu@icloud.com
+    - akdilsiz@tecpor.com
