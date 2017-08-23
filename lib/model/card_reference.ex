@@ -3,7 +3,7 @@ defmodule Iyzico.CardReference do
   Represents a reference to a stored card.
   """
 
-  @enforce_fields ~w(alias user_key token email card type assoc family bank_name)a
+  @enforce_keys ~w(alias user_key token email card type assoc family)a
 
   defstruct [
     :alias,

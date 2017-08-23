@@ -13,8 +13,8 @@ defmodule Iyzico.Auth do
   @api_key Application.get_env(:iyzico, Iyzico)[:api_key]
   @api_secret Application.get_env(:iyzico, Iyzico)[:api_secret]
 
-  static_assert_binary(@api_key, message: "API key should exist.")
-  static_assert_binary(@api_secret, message: "API secret should exist.")
+  static_assert_binary(@api_key)
+  static_assert_binary(@api_secret)
 
   def gen_headers(serialized_body) do
     api_key = Application.get_env(:iyzico, Iyzico)[:api_key]

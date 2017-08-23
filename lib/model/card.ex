@@ -26,14 +26,6 @@ defmodule Iyzico.Card do
     registration_alias: binary
   }
 
-  defp validate_number(number) when is_binary(number) do
-    Luhn.valid? number
-  end
-
-  defp validate_cvc(cvc) when is_integer(cvc) do
-    cvc >= 100 and cvc < 1000
-  end
-
   @doc """
   Converts a card association string into existing atom.
 
@@ -140,19 +132,20 @@ end
 
 defimpl Iyzico.IOListConvertible, for: Iyzico.Card do
   def to_iolist(data) do
-    ioelem =
-      case data.registration_alias do
-        nil ->
-          {"registerCard", 0}
-        _any ->
-          {"registerCard", 1}
-      end
-
-    [{"cardHolderName", data.holder_name},
-     {"cardNumber", data.number},
-     {"expireYear", data.exp_year},
-     {"expireMonth", data.exp_month},
-     {"cvc", data.cvc},
-     ioelem]
+    case data.registration_alias do
+      nil ->
+        [{"cardHolderName", data.holder_name},
+         {"cardNumber", data.number},
+         {"expireYear", data.exp_year},
+         {"expireMonth", data.exp_month},
+         {"cvc", data.cvc},
+         {"registerCard", 0}]
+      _any ->
+        [{"cardAlias", data.registration_alias},
+         {"cardNumber", data.number},
+         {"expireYear", data.exp_year},
+         {"expireMonth", data.exp_month},
+         {"cardHolderName", data.holder_name}]
+    end
   end
 end

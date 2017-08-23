@@ -1,6 +1,6 @@
 defmodule Iyzico.CompileTime do
   @doc false
-  defmacro static_assert_binary(param, opts \\ nil) do
+  defmacro static_assert_binary(param) do
     quote do
       unless is_binary(unquote(param)) do
         raise Iyzico.InvalidConfigurationError

@@ -69,7 +69,9 @@ defmodule Iyzico.Iyzipay do
               type: Card.get_card_type(resp["cardType"]),
               alias: payment_request.payment_card.registration_alias,
               user_key: resp["cardUserKey"],
-              token: resp["cardToken"]
+              token: resp["cardToken"],
+              card: payment_request.payment_card,
+              email: payment_request.buyer.email
             },
             conversation_id: resp["conversationId"],
             currency: resp["currency"] |> String.downcase() |> String.to_atom(),
