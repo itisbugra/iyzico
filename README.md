@@ -18,6 +18,21 @@ def deps do
 end
 ```
 
+## Configuration
+
+You may get your own *API key* and *API secret* from (https://sandbox-merchant.iyzipay.com).
+Once you're ready to production, you will ultimately need to use production mode.
+This is achieved by providing `:prod` parameter to `:world` key.
+
+```elixir
+config :iyzico, Iyzico,
+  locale: "en",
+  api_key: "sandbox-qO7nc7SfZobKsgQq81r518pEnfg6FJQE",
+  api_secret: "sandbox-OFVrJ1h8QM8xq8BMTKBiZUa92JcD2B8g",
+  world: :sandbox,
+  base_url: "https://sandbox-api.iyzipay.com"
+```
+
 ## Usage
 
 #### Making a payment
