@@ -12,12 +12,12 @@ defmodule Iyzico.Mixfile do
      test_coverage: [tool: ExCoveralls],
      package: [
        name: :iyzico,
-       maintainers: ["Buğra Ekuklu"],
+       maintainers: ["Buğra Ekuklu", "Abdulkadir Dilsiz"],
        licenses: ["MIT"],
        links: %{github: "https://github.com/chatatata/iyzico"}
      ],
      description: """
-     Elixir iyzico Client
+     A minimal iyzico Client for Elixir.
      """]
   end
 

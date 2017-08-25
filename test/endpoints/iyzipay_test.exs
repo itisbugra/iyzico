@@ -106,8 +106,9 @@ defmodule Iyzico.IyzipayTest do
         ]
       }
 
-    {:ok, _payment, metadata} = Iyzico.Iyzipay.process_payment_req(payment_request)
+    {:ok, payment, metadata} = Iyzico.Iyzipay.process_payment_req(payment_request)
 
     assert metadata.succeed?
+    assert payment
   end
 end
