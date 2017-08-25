@@ -26,9 +26,41 @@ defmodule Iyzico.Payment do
     :price
   ]
 
+  @typedoc """
+  Currency of the payment. Currently only Turkish Lira (`:try`) is supported.
+  """
   @type currency :: :try
+
+  @typedoc """
+  Fraud status of the payment.
+  If fraud checking authority is performing a wait in operation, the result is `:awaiting`.
+  A suspicious operation will be flagged by the authority as `:restrict`.
+
+  A merchant should proceed to the transaction if and only if value is `:ok`.
+  """
   @type fraud_status :: :restrict | :awaiting | :ok
 
+  @typedoc """
+  A struct representing processed payment.
+
+  ## Fields
+
+  - `:basket_id`: Unique identifier of the basket.
+  - `:bin_id`: Unique identifier of the current bin.
+  - `:card_ref`: Card persistence reference if card is persisted.
+  - `:conversation_id`: Unique identifier of the conversation.
+  - `:currency`: Active currency of the transaction.
+  - `:installment`: The number of applied installments.
+  - `:transactions`: The transactions of subsequent items in the payment.
+  - `:commission_fee`: Commission fee applied to this particular transaction group (payment).
+  - `:commission_amount`: Commission amount applied to the total of transactions.
+  - `:last_four_digits`: Last four digits of the payment card provided.
+  - `:merchant_commission_rate`: Merchant commission rate of the payment.
+  - `:merchant_commission_amount`: Merchant commission amount of the payment.
+  - `:paid_price`: Transaction value.
+  - `:price`: Transaction base value.
+  - `:id`: Payment identifier.
+  """
   @type t :: %__MODULE__{
     basket_id: binary,
     bin_id: binary,
