@@ -1,7 +1,8 @@
 defmodule Iyzico.Card do
-  @typedoc """
-  Represents a card to perform the checkout.
+  @moduledoc """
+  A module representing cards used in monetary transactions.
   """
+
   @enforce_keys ~w(holder_name number exp_year exp_month)a
 
   defstruct [
@@ -13,10 +14,49 @@ defmodule Iyzico.Card do
     :registration_alias,
   ]
 
+  @typedoc """
+  Represents type of a card.
+
+  ##  Card types
+
+  - `:credit`: A credit card performs a transaction by borrowing money made available to a individual, who is a customer
+  of a financial institution. The transferred funds are payed as a debt from the supplier bank to the vendor, which is
+  ultimately paid by the credit card user.
+
+  - `:debit`: A debit card performs a transaction by directly withdrawing the funds from its coupled bank account.
+
+  - `:prepaid`: A reloadable card which performs a transaction by using pre-deposited funds.
+
+  *Reference: [YoungMoney](http://finance.youngmoney.com/credit_debt/credit_basics/credit_debit_prepaid/).*
+  """
   @type card_type :: :credit | :debit | :prepaid
+
+  @typedoc """
+  Represents supplier association of a card.
+
+  ## Caveats
+
+  `:troy` is a Turkish supplier and only available in Turkey.
+  """
   @type card_assoc :: :mastercard | :visa | :amex | :troy
+
+  @typedoc """
+  Represents family of a card.
+  """
   @type card_family :: :bonus | :axess | :world | :maximum | :paraf | :cardfinans | :advantage
 
+  @typedoc """
+  Represents a card to perform the checkout.
+
+  ## Fields
+
+  - `:holder_name`: Name of the holder of the card.
+  - `:number`: Number of the card.
+  - `:exp_year`: Latest two digits of expiration year of the card, *(e.g.: 21 for 2021)*.
+  - `:exp_month`: Index of the expiration month starting form 1, *(e.g.: 1 for January)*.
+  - `:cvc`: CVC or CVV number of the card, typically three to four digits.
+  - `:registration_alias`: Alias of the card if it needs to be registered with ongoing transaction, optional.
+  """
   @type t :: %__MODULE__{
     holder_name: binary,
     number: binary,

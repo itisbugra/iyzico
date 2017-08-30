@@ -16,9 +16,9 @@ defmodule Iyzico.Auth do
   static_assert_binary(@api_key)
   static_assert_binary(@api_secret)
 
-  def gen_headers(serialized_body) do
-    api_key = Application.get_env(:iyzico, Iyzico)[:api_key]
-    api_secret = Application.get_env(:iyzico, Iyzico)[:api_secret]
+  def gen_headers(serialized_body, opts \\ []) do
+    api_key = Keyword.get(opts, :api_key, Application.get_env(:iyzico, Iyzico)[:api_key])
+    api_secret = Keyword.get(opts, :api_secret, Application.get_env(:iyzico, Iyzico)[:api_secret])
     rand_string = gen_rand_string(@rand_string_size)
 
     [gen_auth_header(rand_string, api_key, api_secret, serialized_body),

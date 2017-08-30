@@ -1,4 +1,40 @@
 defmodule Iyzico.Iyzipay do
+  @moduledoc """
+  A module containing payment related functions.
+
+  ## Making a payment
+
+  In order to process a payment, one needs to create a `Iyzico.PaymentRequest` struct, which consists of a payment card,
+  a buyer, two seperate addresses for shipping and billing and basket information (aka *items*).
+  ```
+  payment_request =
+    %PaymentRequest{
+      locale: @current_locale,
+      conversation_id: "123456789",
+      price: "0.5",
+      paid_price: "0.7",
+      currency: :try,
+      basket_id: "B67832",
+      payment_channel: :web,
+      payment_group: :product,
+      payment_card: card,
+      installment: 1,
+      buyer: buyer,
+      shipping_address: shipping_address,
+      billing_address: billing_address,
+      basket_items: [
+        binocular_item,
+        game_item
+      ]
+    }
+  ```
+
+  With that `Iyzico.PaymentRequest`, it is straightforward to process the request.
+
+  ```
+  {:ok, payment, metadata} = process_payment_req(payment_request)
+  ```
+  """
   import Iyzico.Client
 
   alias Iyzico.Payment
@@ -10,7 +46,25 @@ defmodule Iyzico.Iyzipay do
 
   @doc """
   Processes the given payment request on the remote API.
+
+  ## 3D Secure support
+
+  To enhance authenticity of a transaction, *3D Secure* could be used optionally, although some associations might
+  require the use of *3D Secure* explicitly.
+  Performing *3D Secure* based transaction is achieved by supplying a callback URL to the function.
+
+  ## Options
+
+  - `:api_key`: API key to be used in authentication, optional. Configuration is used instead if not supplied.
+
+  - `:api_secret`: API secret key to be used in authentication. Configuration is used instead if not supplied.
+
+  - `:secure_callback_url`: Callback URL to be used in *3D Secure* workflow, optional.
+  *3D Secure* is not used if not supplied.
   """
+  @spec process_payment_req(Iyzico.PaymentRequest.t, Keyword.t) ::
+    {:ok, Iyzico.Payment.t, Iyzico.Metadata.t} |
+    {:error, atom}
   def process_payment_req(payment_request = %Iyzico.PaymentRequest{}, opts \\ []) do
     callback_url = Keyword.get(opts, :secure_callback_url)
     payment_request = put_callback_url(payment_request, callback_url)
@@ -22,7 +76,7 @@ defmodule Iyzico.Iyzipay do
         {"/payment/3dsecure/auth", Map.put(payment_request, :callback_url, callback_url)}
       end
 
-    case request([], :post, url_for_path(url), [], payment_request) do
+    case request([], :post, url_for_path(url), [], payment_request, opts) do
       {:ok, resp} ->
         transactions =
           resp["itemTransactions"]

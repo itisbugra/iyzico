@@ -1,5 +1,5 @@
 defmodule Iyzico.CompileTime do
-  @doc false
+  @moduledoc false
   defmacro static_assert_binary(param) do
     quote do
       unless is_binary(unquote(param)) do

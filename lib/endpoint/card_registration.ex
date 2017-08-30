@@ -17,10 +17,10 @@ defmodule Iyzico.CardRegistration do
   Stores a card with given external identifier. One can later retrieve or refer
   to the given card with that identifier.
   """
-  @spec create_card(Iyzico.Card.t, binary, binary, binary) ::
+  @spec create_card(Iyzico.Card.t, binary, binary, binary, Keyword.t) ::
     {:ok, Iyzico.CardReference.t, Iyzico.Metadata.t} |
     {:error, :invalid_card}
-  def create_card(card = %Iyzico.Card{}, external_id, conversation_id, email) do
+  def create_card(card = %Iyzico.Card{}, external_id, conversation_id, email, opts \\ []) do
     registration =
       %CardRegistrationRequest{
         locale: @default_locale,
@@ -31,7 +31,7 @@ defmodule Iyzico.CardRegistration do
       }
 
     if Luhn.valid? registration.card.number do
-      case request([], :post, url_for_path("/cardstorage/card"), [], registration) do
+      case request([], :post, url_for_path("/cardstorage/card"), [], registration, opts) do
         {:ok, resp} ->
           card_ref =
             %CardReference{
