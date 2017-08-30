@@ -43,6 +43,9 @@ defmodule Iyzico.Client do
         serialized_body = serialize(Iyzico.IOListConvertible.to_iolist(body))
         json_body = to_json(Iyzico.IOListConvertible.to_iolist(body))
 
+        IO.inspect serialized_body
+        IO.inspect json_body
+
         headers = headers ++ gen_headers(serialized_body) ++ [{'Content-Type', 'application/json'}]
         :httpc.request(method, {url, headers, 'application/json', json_body}, opts, body_format: :binary)
     end
