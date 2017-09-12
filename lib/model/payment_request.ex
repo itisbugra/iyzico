@@ -1,6 +1,8 @@
 defmodule Iyzico.PaymentRequest do
   @typedoc """
   Represents a payment request information.
+  
+  For *3D Secure* enhanced payment operations, navigate to `Iyzico.SecurePaymentRequest`.
   """
   @enforce_keys ~w(conversation_id price
                    paid_price currency installment
