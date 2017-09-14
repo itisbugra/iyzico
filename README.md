@@ -9,7 +9,7 @@ A minimal *iyzico* client.
 
 ## Installation
 
-[Available in Hex](https://hex.pm/docs/publish), the package can be installed
+[Available in Hex](https://hex.pm/packages/iyzico), the package can be installed
 by adding `iyzico` to your list of dependencies in `mix.exs`:
 
 ```elixir
@@ -17,6 +17,12 @@ def deps do
   [{:iyzico, "~> 1.0"}]
 end
 ```
+
+## Documentation
+
+[Available in HexDocs](https://hexdocs.pm/iyzico/). You can also [download](https://repo.hex.pm/docs/iyzico-1.3.0.tar.gz) it to use it offline.
+
+We try hard to make available documentation for all features. Please be calm while we documenting new features.
 
 ## Configuration
 
