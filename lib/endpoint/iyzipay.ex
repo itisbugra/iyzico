@@ -45,6 +45,8 @@ defmodule Iyzico.Iyzipay do
   Processing a secure payment is on par with insecure payments, what is more, secure payments require a callback URL
   since remote authority will finalize the transaction by making a call to given URL.
 
+  #### Instantiation
+
   ```
   payment_request =
     %SecurePaymentRequest{
@@ -67,6 +69,21 @@ defmodule Iyzico.Iyzipay do
       ],
       callback_url: "https://some.domain.to/be-specified/"
     }
+
+  {:ok, artifact, metadata} = init_secure_payment_req(payment_request)
+  ```
+
+  #### Finalization
+
+  ```
+  handle =
+    %SecurePaymentHandle{
+      conversation_id: "123456789",
+      payment_id: "10533265",
+      conversation_data: "some data"
+    }
+
+  {:ok, payment, metadata} = finalize_secure_payment_req(handle)
   ```
 
   ## Discussion
