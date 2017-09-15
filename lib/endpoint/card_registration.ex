@@ -165,7 +165,11 @@ defmodule Iyzico.CardRegistration do
     end
   end
 
+  @doc """
+  Validates a card, returns `true` value if card is valid. Otherwise, returns `false`.
+  """
+  @spec valid?(Iyzico.Card.t) :: boolean
   def valid?(card = %Iyzico.Card{}) do
-
+    Luhn.valid?(card.number)
   end
 end
