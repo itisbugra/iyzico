@@ -114,9 +114,9 @@ defmodule Iyzico.CardRegistration do
     no_return
   def delete_card!(user_key, token, conversation_id) do
     case delete_card(user_key, token, conversation_id) do
-      {:ok, metadata} ->
+      {:ok, _metadata} ->
         nil
-      {:error, any} ->
+      {:error, _any} ->
         raise Iyzico.CardNotRegisteredError
     end
   end
