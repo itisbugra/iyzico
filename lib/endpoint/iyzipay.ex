@@ -34,17 +34,17 @@ defmodule Iyzico.Iyzipay do
   ```
   {:ok, payment, metadata} = process_payment_req(payment_request)
   ```
-  
+
   #### 3D Secure support
 
   Authenticity of a transaction can be enhanced using *3D Secure* feature, which is optional, although some associations might require the use of *3D Secure* explicitly.
   *3D Secure* based transaction could performed with `process_secure_payment_req/2` function, which is analogical to its insecure friend `process_payment_req/3`.
-  
+
   ## Making a secure payment
-  
+
   Processing a secure payment is on par with insecure payments, what is more, secure payments require a callback URL
   since remote authority will finalize the transaction by making a call to given URL.
-  
+
   ```
   payment_request =
     %SecurePaymentRequest{
@@ -68,16 +68,16 @@ defmodule Iyzico.Iyzipay do
       callback_url: "https://some.domain.to/be-specified/"
     }
   ```
-  
+
   ## Discussion
-  
+
   Although utilization of *3D secure* featured transactions become overwhelming in terms of duration of the payment
   it is highly discouraged to perform insecure transactions directly, especially without concerning about customer's
   consent.
   Secure transactions involve two-factor authentication provided by associations, hence displacing the responsibility of
   the developer to be not concerned about authenticity of the credit card information.
-  
-  ## Common Options
+
+  ## Common options
 
   - `:api_key`: API key to be used in authentication, optional. Configuration is used instead if not supplied.
 
@@ -106,14 +106,14 @@ defmodule Iyzico.Iyzipay do
   def process_payment_req(payment_request = %Iyzico.PaymentRequest{}, opts \\ []) do
     case request([], :post, url_for_path("/payment/auth"), [], payment_request, opts) do
       {:ok, resp} ->
-        if resp["status"] == "success", 
-          do: serialize_resp(resp), 
+        if resp["status"] == "success",
+          do: serialize_resp(resp),
           else: handle_error(resp)
       any ->
         any
      end
   end
-  
+
   @doc """
   Same as `process_payment_req/1`, but raises an `Iyzico.PaymentProcessingError` exception in case of failure.
   Otherwise returns successfully processed payment.
@@ -126,7 +126,7 @@ defmodule Iyzico.Iyzipay do
         raise Iyzico.PaymentProcessingError, code: code
     end
   end
-  
+
   @doc """
   Instantiates the given secure payment request on the remote API.
 
@@ -158,12 +158,12 @@ defmodule Iyzico.Iyzipay do
         any
      end
   end
-  
+
   @doc """
   Finalizes a valid secure payment artifact on the remote API.
-  
+
   ## Options
-  
+
   See common options.
   """
   @spec finalize_secure_payment_req(Iyzico.SecurePaymentHandle.t, Keyword.t) ::
@@ -172,14 +172,14 @@ defmodule Iyzico.Iyzipay do
   def finalize_secure_payment_req(handle = %Iyzico.SecurePaymentHandle{}, opts \\ []) do
     case request([], :post, url_for_path("/payment/3dsecure/auth"), [], handle, opts) do
       {:ok, resp} ->
-        if resp["status"] == "success", 
-          do: serialize_resp(resp), 
+        if resp["status"] == "success",
+          do: serialize_resp(resp),
           else: handle_error(resp)
       any ->
         any
     end
   end
-  
+
   defp handle_error(%{"errorCode" => "5115"}), do: {:error, :unavail}
   defp handle_error(%{"errorCode" => "10051"}), do: {:error, :insufficient_funds}
   defp handle_error(%{"errorCode" => "10005"}), do: {:error, :do_not_honor}
@@ -191,7 +191,8 @@ defmodule Iyzico.Iyzipay do
   defp handle_error(%{"errorCode" => "10084"}), do: {:error, :invalid_cvc}
   defp handle_error(%{"errorCode" => "10012"}), do: {:error, :invalid}
   defp handle_error(%{"errorCode" => "10202"}), do: {:error, nil}
-  
+  defp handle_error(_), do: raise Iyzico.InternalInconsistencyError
+
   defp serialize_resp(resp) do
     transactions =
       resp["itemTransactions"]
@@ -264,7 +265,3 @@ defmodule Iyzico.Iyzipay do
     {:ok, payment, metadata}
   end
 end
-
-
-
-
