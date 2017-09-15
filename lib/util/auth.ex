@@ -1,4 +1,5 @@
 defmodule Iyzico.Auth do
+  @moduledoc false
   @doc false
 
   import Iyzico.CompileTime

@@ -1,6 +1,6 @@
 defmodule Iyzico.Buyer do
-  @typedoc """
-  Represents a peer party of a transactional operation.
+  @moduledoc """
+  A module for representing a peer party of a transactional operation.
   """
   @enforce_keys ~w(id name surname identity_number
                    email phone_number registration_date
@@ -22,6 +22,9 @@ defmodule Iyzico.Buyer do
     :ip
   ]
 
+  @typedoc """
+  Represents a peer party of a transactional operation.
+  """
   @type t :: %__MODULE__{
     id: binary,
     name: binary,

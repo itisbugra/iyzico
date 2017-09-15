@@ -1,6 +1,6 @@
 defmodule Iyzico.Payment do
   @moduledoc """
-  Represents a successfully made payment returned from the platform.
+  A module representing information for successful payment returned from the platform.
   """
 
   @enforce_keys ~w(basket_id bin_id card_ref conversation_id currency

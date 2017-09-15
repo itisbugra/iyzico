@@ -1,9 +1,9 @@
 defmodule Iyzico.CardReference do
-  @doc """
-  Represents a reference to a stored card.
+  @moduledoc """
+  A module representing a reference to a stored card.
   """
 
-  @enforce_keys ~w(user_key token type assoc family)a
+  @enforce_keys ~w(type assoc family)a
 
   defstruct [
     :alias,
@@ -17,6 +17,9 @@ defmodule Iyzico.CardReference do
     :bank_name
   ]
 
+  @typedoc """
+  Represents a reference to a stored card.
+  """
   @type t :: %__MODULE__{
     alias: binary,
     user_key: binary,

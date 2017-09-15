@@ -1,4 +1,5 @@
 defmodule Iyzico.CardRegistrationRequest do
+  @moduledoc false
   @doc false
   @enforce_keys ~w(conversation_id external_id email card)a
 
