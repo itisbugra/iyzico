@@ -21,7 +21,7 @@ use Mix.Config
 #     config :logger, level: :info
 #
 config :iyzico, Iyzico,
-  locale: "tr",
+  locale: "en",
   api_key: "sandbox-qO7nc7SfZobKsgQq81r518pEnfg6FJQE",
   api_secret: "sandbox-OFVrJ1h8QM8xq8BMTKBiZUa92JcD2B8g",
   world: :sandbox,
