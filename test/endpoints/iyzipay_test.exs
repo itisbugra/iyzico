@@ -407,7 +407,7 @@ defmodule Iyzico.IyzipayTest do
     {:ok, payment, _metadata} =
       Iyzico.Iyzipay.process_payment_req(payment_request)
 
-    assert elem(Iyzico.Iyzipay.revoke_payment(payment.id, "123456789"), 0) == :ok
+    assert Iyzico.Iyzipay.revoke_payment!(payment.id, "123456789")
   end
 
   test "does not cancel a non-existent payment" do

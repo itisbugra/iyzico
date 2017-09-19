@@ -202,6 +202,17 @@ defmodule Iyzico.Iyzipay do
     end
   end
 
+  @doc """
+  Revokes an existing payment on the remote API.
+  Returns `{:error, :unowned}` if payment is not owned by the API user.
+
+  ## Options
+
+  See common options.
+  """
+  @spec revoke_payment(binary, binary, Keyword.t) ::
+    {:ok, Iyzico.Metadata.t} |
+    {:error, :unowned}
   def revoke_payment(payment_id, conversation_id, opts \\ [])
     when is_binary(payment_id) and is_binary(conversation_id) do
     revoke = %RevokePaymentRequest{
@@ -227,6 +238,22 @@ defmodule Iyzico.Iyzipay do
         end
       any ->
         any
+    end
+  end
+
+  @doc """
+  Same as `revoke_payment/3`, but raises `Iyzico.InternalInconsistencyError` if
+  there was an error.
+  """
+  @spec revoke_payment!(binary, binary, Keyword.t) ::
+    Iyzico.Metadata.t |
+    no_return
+  def revoke_payment!(payment_id, conversation_id, opts \\ []) do
+    case revoke_payment(payment_id, conversation_id, opts) do
+      {:ok, metadata} ->
+        metadata
+      {:error, code} ->
+        raise Iyzico.InternalInconsistencyError, code: code
     end
   end
 
