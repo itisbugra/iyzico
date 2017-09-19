@@ -143,6 +143,9 @@ defmodule Iyzico.Iyzipay do
   alias Iyzico.CardReference
   alias Iyzico.SecurePaymentArtifact
   alias Iyzico.RevokePaymentRequest
+  alias Iyzico.RefundPaymentRequest
+
+  @type currency :: :try
 
   @server_ip Keyword.get(Application.get_env(:iyzico, Iyzico), :server_ip, nil)
   static_assert_tuple(@server_ip)
@@ -290,12 +293,70 @@ defmodule Iyzico.Iyzipay do
     end
   end
 
-  def refund_payment() do
 
+  @doc """
+  Refunds a payment of a successful transaction by given amount.
+
+  ## Options
+
+  See common options.
+  """
+  @spec refund_payment(binary, binary, binary, currency, Keyword.t) ::
+    {:ok, Iyzico.Metadata.t} |
+    {:error, :excessive_funds} |
+    {:error, :unowned}
+  def refund_payment(transaction_id, conversation_id, price, currency, opts \\ [])
+    when is_binary(transaction_id) and is_binary(conversation_id) and
+         is_binary(price) do
+    refund =
+      %RefundPaymentRequest{
+        conversation_id: conversation_id,
+        transaction_id: transaction_id,
+        price: price,
+        ip: @server_ip,
+        currency: currency
+      }
+
+    case request([], :post, url_for_path("/payment/refund"), [], refund, opts) do
+      {:ok, resp} ->
+        if resp["status"] == "success" do
+          metadata =
+            %Metadata{
+              system_time: resp["systemTime"],
+              succeed?: resp["status"] == "success",
+              phase: resp["phase"],
+              locale: resp["locale"],
+              auth_code: resp["authCode"]}
+
+          {:ok, metadata}
+        else
+          handle_error(resp)
+        end
+      any ->
+        any
+    end
   end
 
+  @doc """
+  Same as `refund_payment/5`, but raises `Iyzico.InternalInconsistencyError` if
+  there was an error.
+  """
+  @spec refund_payment!(binary, binary, binary, currency, Keyword.t) ::
+    Iyzico.Metadata.t |
+    no_return
+  def refund_payment!(transaction_id, conversation_id, price, currency, opts \\ []) do
+    case refund_payment(transaction_id, conversation_id, price, currency, opts) do
+      {:ok, metadata} ->
+        metadata
+      {:error, code} ->
+        raise Iyzico.InternalInconsistencyError, code: code
+    end
+  end
+
+  defp handle_error(%{"errorCode" => "5093"}), do: {:error, :excessive_funds}
   defp handle_error(%{"errorCode" => "5115"}), do: {:error, :unavail}
   defp handle_error(%{"errorCode" => "5086"}), do: {:error, :unowned}
+  defp handle_error(%{"errorCode" => "5092"}), do: {:error, :unowned}
   defp handle_error(%{"errorCode" => "10051"}), do: {:error, :insufficient_funds}
   defp handle_error(%{"errorCode" => "10005"}), do: {:error, :do_not_honor}
   defp handle_error(%{"errorCode" => "10057"}), do: {:error, :holder_permit}

@@ -14,7 +14,7 @@ defmodule Iyzico.RevokePaymentRequest do
   @type t :: %__MODULE__{
     conversation_id: binary,
     payment_id: binary,
-    ip: binary
+    ip: tuple
   }
 end
 
