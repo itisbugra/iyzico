@@ -36,7 +36,8 @@ config :iyzico, Iyzico,
   api_key: "sandbox-qO7nc7SfZobKsgQq81r518pEnfg6FJQE",
   api_secret: "sandbox-OFVrJ1h8QM8xq8BMTKBiZUa92JcD2B8g",
   world: :sandbox,
-  base_url: "https://sandbox-api.iyzipay.com"
+  base_url: "https://sandbox-api.iyzipay.com",
+  ip: {67, 43, 43, 43}
 ```
 
 ## Usage
