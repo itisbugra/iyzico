@@ -101,6 +101,7 @@ defmodule Iyzico.Iyzipay do
   - `:api_secret`: API secret key to be used in authentication. Configuration is used instead if not supplied.
   """
   import Iyzico.Client
+  import Iyzico.CompileTime
 
   alias Iyzico.Payment
   alias Iyzico.Transaction
@@ -109,6 +110,10 @@ defmodule Iyzico.Iyzipay do
   alias Iyzico.Card
   alias Iyzico.CardReference
   alias Iyzico.SecurePaymentArtifact
+  alias Iyzico.RevokePaymentRequest
+
+  @server_ip Keyword.get(Application.get_env(:iyzico, Iyzico), :server_ip, nil)
+  static_assert_tuple(@server_ip)
 
   @doc """
   Processes the given payment request on the remote API.
@@ -197,7 +202,40 @@ defmodule Iyzico.Iyzipay do
     end
   end
 
+  def revoke_payment(payment_id, conversation_id, opts \\ [])
+    when is_binary(payment_id) and is_binary(conversation_id) do
+    revoke = %RevokePaymentRequest{
+      conversation_id: conversation_id,
+      payment_id: payment_id,
+      ip: @server_ip
+    }
+
+    case request([], :post, url_for_path("/payment/cancel"), [], revoke, opts) do
+      {:ok, resp} ->
+        if resp["status"] == "success" do
+          metadata =
+            %Metadata{
+              system_time: resp["systemTime"],
+              succeed?: resp["status"] == "success",
+              phase: resp["phase"],
+              locale: resp["locale"],
+              auth_code: resp["authCode"]}
+
+          {:ok, metadata}
+        else
+          handle_error(resp)
+        end
+      any ->
+        any
+    end
+  end
+
+  def refund_payment() do
+
+  end
+
   defp handle_error(%{"errorCode" => "5115"}), do: {:error, :unavail}
+  defp handle_error(%{"errorCode" => "5086"}), do: {:error, :unowned}
   defp handle_error(%{"errorCode" => "10051"}), do: {:error, :insufficient_funds}
   defp handle_error(%{"errorCode" => "10005"}), do: {:error, :do_not_honor}
   defp handle_error(%{"errorCode" => "10057"}), do: {:error, :holder_permit}
