@@ -4,8 +4,10 @@ defmodule Iyzico.Iyzipay do
 
   ## Making a payment
 
-  In order to process a payment, one needs to create a `Iyzico.PaymentRequest` struct, which consists of a payment card,
-  a buyer, two seperate addresses for shipping and billing and basket information (aka *items*).
+  In order to process a payment, one needs to create a `Iyzico.PaymentRequest`
+  struct, which consists of a payment card,
+  a buyer, two seperate addresses for shipping and billing and basket
+  information (aka *items*).
   ```
   payment_request =
     %PaymentRequest{
@@ -29,7 +31,8 @@ defmodule Iyzico.Iyzipay do
     }
   ```
 
-  With that `Iyzico.PaymentRequest`, it is straightforward to process the request.
+  With that `Iyzico.PaymentRequest`, it is straightforward to process the
+  request.
 
   ```
   {:ok, payment, metadata} = process_payment_req(payment_request)
@@ -37,13 +40,19 @@ defmodule Iyzico.Iyzipay do
 
   #### 3D Secure support
 
-  Authenticity of a transaction can be enhanced using *3D Secure* feature, which is optional, although some associations might require the use of *3D Secure* explicitly.
-  *3D Secure* based transaction could performed with `process_secure_payment_req/2` function, which is analogical to its insecure friend `process_payment_req/3`.
+  Authenticity of a transaction can be enhanced using *3D Secure* feature,
+  which is optional, although some associations might require the use of
+  *3D Secure* explicitly.
+  *3D Secure* based transaction could performed with
+  `process_secure_payment_req/2` function, which is analogical to its insecure
+  friend `process_payment_req/3`.
 
   ## Making a secure payment
 
-  Processing a secure payment is on par with insecure payments, what is more, secure payments require a callback URL
-  since remote authority will finalize the transaction by making a call to given URL.
+  Processing a secure payment is on par with insecure payments, what is more,
+  secure payments require a callback URL
+  since remote authority will finalize the transaction by making a call to
+  given URL.
 
   #### Instantiation
 
@@ -86,19 +95,42 @@ defmodule Iyzico.Iyzipay do
   {:ok, payment, metadata} = finalize_secure_payment_req(handle)
   ```
 
+  ## Post-payment operations
+
+  After payment is successfully completed, it can be revoked (cancelled) or
+  refunded.
+  A revoke operation deletes the payment and can be utilized if and only if
+  transaction has not reconciliated by the bank, which often happens at the
+  end of a day.
+  Successful revoke operations are invisible in card statement.
+
+  **Some regulations applied by banks on transactions might restrict
+  cancellation operations.**
+
+  Refund operations could also be performed in order to pay back specified
+  amount of funds and can be performed in any time, without any restrictions.
+  Merchants are able to refund up to full amount of the transaction, and
+  able to do it with proportions of the amount.
+  Multiple refund operations could be performed by making sequential calls.
+
   ## Discussion
 
-  Although utilization of *3D secure* featured transactions become overwhelming in terms of duration of the payment
-  it is highly discouraged to perform insecure transactions directly, especially without concerning about customer's
+  Although utilization of *3D secure* featured transactions become overwhelming
+  in terms of duration of the payment it is highly discouraged to perform
+  insecure transactions directly, especially without concerning about customer's
   consent.
-  Secure transactions involve two-factor authentication provided by associations, hence displacing the responsibility of
-  the developer to be not concerned about authenticity of the credit card information.
+  Secure transactions involve two-factor authentication provided by
+  associations, hence displacing the responsibility of
+  the developer to be not concerned about authenticity of the credit card
+  information.
 
   ## Common options
 
-  - `:api_key`: API key to be used in authentication, optional. Configuration is used instead if not supplied.
+  - `:api_key`: API key to be used in authentication, optional. Configuration
+  is used instead if not supplied.
 
-  - `:api_secret`: API secret key to be used in authentication. Configuration is used instead if not supplied.
+  - `:api_secret`: API secret key to be used in authentication. Configuration
+  is used instead if not supplied.
   """
   import Iyzico.Client
   import Iyzico.CompileTime
@@ -137,7 +169,8 @@ defmodule Iyzico.Iyzipay do
   end
 
   @doc """
-  Same as `process_payment_req/1`, but raises an `Iyzico.PaymentProcessingError` exception in case of failure.
+  Same as `process_payment_req/1`, but raises an
+  `Iyzico.PaymentProcessingError` exception in case of failure.
   Otherwise returns successfully processed payment.
   """
   def process_payment_req!(payment = %Iyzico.PaymentRequest{}, opts \\ []) do
