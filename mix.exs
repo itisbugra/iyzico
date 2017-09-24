@@ -12,7 +12,7 @@ defmodule Iyzico.Mixfile do
      test_coverage: [tool: ExCoveralls],
      package: [
        name: :iyzico,
-       maintainers: ["Buğra Ekuklu", "Abdulkadir Dilsiz"],
+       maintainers: ["Buğra Ekuklu", "Abdulkadir Dilsiz", "Fatih Demirel"],
        licenses: ["MIT"],
        links: %{github: "https://github.com/chatatata/iyzico"}
      ],
