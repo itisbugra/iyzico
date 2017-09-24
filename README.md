@@ -5,9 +5,10 @@ A minimal *iyzico* client.
 ###### Currently maintained by [@heybuybuddy](https://github.com/heybuybuddy/).
 
 [![Build Status](https://travis-ci.org/Chatatata/iyzico.svg?branch=master)](https://travis-ci.org/Chatatata/iyzico)
+[![Hex.pm](https://img.shields.io/hexpm/v/iyzico.svg)](https://hex.pm/packages/iyzico)
+[![Downloads](https://img.shields.io/hexpm/dt/iyzico.svg)](https://hex.pm/packages/iyzico)
 [![Inline docs](http://inch-ci.org/github/Chatatata/iyzico.svg)](http://inch-ci.org/github/Chatatata/iyzico)
 [![Deps Status](https://beta.hexfaktor.org/badge/all/github/Chatatata/iyzico.svg)](https://beta.hexfaktor.org/github/Chatatata/iyzico)
-[![Prod Deps Status](https://beta.hexfaktor.org/badge/prod/github/Chatatata/iyzico.svg)](https://beta.hexfaktor.org/github/Chatatata/iyzico)
 
 ## Installation
 
