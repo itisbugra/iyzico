@@ -18,7 +18,7 @@ defmodule Iyzico.IyzipayTest do
     card =
       %Card{
         holder_name: "John Doe",
-        number: "5451030000000000",
+        number: "4059030000000009",
         exp_month: 12,
         exp_year: 2030,
         cvc: 123
