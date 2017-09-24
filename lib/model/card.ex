@@ -43,7 +43,7 @@ defmodule Iyzico.Card do
   @typedoc """
   Represents family of a card.
   """
-  @type card_family :: :bonus | :axess | :world | :maximum | :paraf | :cardfinans | :advantage | :neo
+  @type card_family :: :bonus | :axess | :world | :maximum | :paraf | :cardfinans | :advantage | :neo | :denizbank
 
   @typedoc """
   Represents a card to perform the checkout.
@@ -151,6 +151,9 @@ defmodule Iyzico.Card do
 
       iex> Iyzico.Card.get_card_family "Neo"
       :neo
+
+      iex> Iyzico.Card.get_card_family "Denizbank DC"
+      :denizbank
   """
   @spec get_card_family(String.t) :: card_family
   def get_card_family(family) do
@@ -171,6 +174,8 @@ defmodule Iyzico.Card do
         :advantage
       "Neo" ->
         :neo
+      "Denizbank DC" ->
+        :denizbank
     end
   end
 end
