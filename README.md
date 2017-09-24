@@ -6,6 +6,8 @@ A minimal *iyzico* client.
 
 [![Build Status](https://travis-ci.org/Chatatata/iyzico.svg?branch=master)](https://travis-ci.org/Chatatata/iyzico)
 [![Inline docs](http://inch-ci.org/github/Chatatata/iyzico.svg)](http://inch-ci.org/github/Chatatata/iyzico)
+[![Deps Status](https://beta.hexfaktor.org/badge/all/github/Chatatata/iyzico.svg)](https://beta.hexfaktor.org/github/Chatatata/iyzico)
+[![Prod Deps Status](https://beta.hexfaktor.org/badge/prod/github/Chatatata/iyzico.svg)](https://beta.hexfaktor.org/github/Chatatata/iyzico)
 
 ## Installation
 
