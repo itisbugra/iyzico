@@ -148,6 +148,9 @@ defmodule Iyzico.Card do
 
       iex> Iyzico.Card.get_card_family "Advantage"
       :advantage
+
+      iex> Iyzico.Card.get_card_family "Neo"
+      :neo
   """
   @spec get_card_family(String.t) :: card_family
   def get_card_family(family) do
