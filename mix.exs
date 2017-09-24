@@ -3,7 +3,7 @@ defmodule Iyzico.Mixfile do
 
   def project do
     [app: :iyzico,
-     version: "1.5.1",
+     version: "1.5.2",
      elixir: "~> 1.4",
      elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
@@ -46,6 +46,7 @@ defmodule Iyzico.Mixfile do
     [{:poison, "~> 3.1"},
      {:luhn, "~> 0.3.1"},
      {:ex_doc, ">= 0.0.0", only: :dev},
-     {:excoveralls, "~> 0.7.2", only: :test}]
+     {:excoveralls, "~> 0.7.2", only: :test},
+     {:inch_ex, only: :docs}]
   end
 end

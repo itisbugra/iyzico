@@ -4,8 +4,8 @@ A minimal *iyzico* client.
 
 ###### Currently maintained by [@heybuybuddy](https://github.com/heybuybuddy/).
 
-
 [![Build Status](https://travis-ci.org/Chatatata/iyzico.svg?branch=master)](https://travis-ci.org/Chatatata/iyzico)
+[![Inline docs](http://inch-ci.org/github/Chatatata/iyzico.svg)](http://inch-ci.org/github/Chatatata/iyzico)
 
 ## Installation
 
