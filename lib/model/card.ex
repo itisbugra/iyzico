@@ -43,7 +43,8 @@ defmodule Iyzico.Card do
   @typedoc """
   Represents family of a card.
   """
-  @type card_family :: :bonus | :axess | :world | :maximum | :paraf | :cardfinans | :advantage | :neo | :denizbank | :cardfinans | :halkbank | :is_bank | :vakifbank | :yapi_kredi | :hsbc | :garanti
+  @type card_family :: :bonus | :axess | :world | :maximum | :paraf | :cardfinans | :advantage | :neo | :denizbank |
+                       :cardfinans | :halkbank | :is_bank | :vakifbank | :yapi_kredi | :hsbc | :garanti
 
   @typedoc """
   Represents a card to perform the checkout.
