@@ -5,7 +5,7 @@ defmodule Iyzico.CardNotRegisteredError do
     %Iyzico.CardNotRegisteredError{}
   end
 
-  def message(exception) do
+  def message(_exception) do
     "Card was not registered on remote host."
   end
 end
