@@ -43,7 +43,7 @@ defmodule Iyzico.Card do
   @typedoc """
   Represents family of a card.
   """
-  @type card_family :: :bonus | :axess | :world | :maximum | :paraf | :cardfinans | :advantage | :neo
+  @type card_family :: :bonus | :axess | :world | :maximum | :paraf | :cardfinans | :advantage | :neo | :denizbank | :cardfinans | :halkbank | :is_bank | :vakifbank | :yapi_kredi | :hsbc | :garanti
 
   @typedoc """
   Represents a card to perform the checkout.
@@ -151,6 +151,30 @@ defmodule Iyzico.Card do
 
       iex> Iyzico.Card.get_card_family "Neo"
       :neo
+
+      iex> Iyzico.Card.get_card_family "Denizbank DC"
+      :denizbank
+
+      iex> Iyzico.Card.get_card_family "Cardfinans DC"
+      :cardfinans
+
+      iex> Iyzico.Card.get_card_family "Halkbank DC"
+      :halkbank
+
+      iex> Iyzico.Card.get_card_family "Bankamatik"
+      :is_bank
+
+      iex> Iyzico.Card.get_card_family "Vakıfbank DC"
+      :vakifbank
+
+      iex> Iyzico.Card.get_card_family "Tlcard"
+      :yapi_kredi
+
+      iex> Iyzico.Card.get_card_family "Advantage DC"
+      :hsbc
+
+      iex> Iyzico.Card.get_card_family "Paracard"
+      :garanti
   """
   @spec get_card_family(String.t) :: card_family
   def get_card_family(family) do
@@ -171,6 +195,22 @@ defmodule Iyzico.Card do
         :advantage
       "Neo" ->
         :neo
+      "Denizbank DC" ->
+        :denizbank
+      "Cardfinans DC" ->
+        :cardfinans
+      "Halkbank DC" ->
+        :halkbank
+      "Bankamatik" ->
+        :is_bank
+      "Vakıfbank DC" ->
+        :vakifbank
+      "Tlcard" ->
+        :yapi_kredi
+      "Advantage DC" ->
+        :hsbc
+      "Paracard" ->
+        :garanti
     end
   end
 end
