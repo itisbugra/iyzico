@@ -4,8 +4,10 @@ defmodule Iyzico.Iyzipay do
 
   ## Making a payment
 
-  In order to process a payment, one needs to create a `Iyzico.PaymentRequest` struct, which consists of a payment card,
-  a buyer, two seperate addresses for shipping and billing and basket information (aka *items*).
+  In order to process a payment, one needs to create a `Iyzico.PaymentRequest`
+  struct, which consists of a payment card,
+  a buyer, two seperate addresses for shipping and billing and basket
+  information (aka *items*).
   ```
   payment_request =
     %PaymentRequest{
@@ -29,7 +31,8 @@ defmodule Iyzico.Iyzipay do
     }
   ```
 
-  With that `Iyzico.PaymentRequest`, it is straightforward to process the request.
+  With that `Iyzico.PaymentRequest`, it is straightforward to process the
+  request.
 
   ```
   {:ok, payment, metadata} = process_payment_req(payment_request)
@@ -37,13 +40,19 @@ defmodule Iyzico.Iyzipay do
 
   #### 3D Secure support
 
-  Authenticity of a transaction can be enhanced using *3D Secure* feature, which is optional, although some associations might require the use of *3D Secure* explicitly.
-  *3D Secure* based transaction could performed with `process_secure_payment_req/2` function, which is analogical to its insecure friend `process_payment_req/3`.
+  Authenticity of a transaction can be enhanced using *3D Secure* feature,
+  which is optional, although some associations might require the use of
+  *3D Secure* explicitly.
+  *3D Secure* based transaction could performed with
+  `process_secure_payment_req/2` function, which is analogical to its insecure
+  friend `process_payment_req/3`.
 
   ## Making a secure payment
 
-  Processing a secure payment is on par with insecure payments, what is more, secure payments require a callback URL
-  since remote authority will finalize the transaction by making a call to given URL.
+  Processing a secure payment is on par with insecure payments, what is more,
+  secure payments require a callback URL
+  since remote authority will finalize the transaction by making a call to
+  given URL.
 
   #### Instantiation
 
@@ -86,21 +95,45 @@ defmodule Iyzico.Iyzipay do
   {:ok, payment, metadata} = finalize_secure_payment_req(handle)
   ```
 
+  ## Post-payment operations
+
+  After payment is successfully completed, it can be revoked (cancelled) or
+  refunded.
+  A revoke operation deletes the payment and can be utilized if and only if
+  transaction has not reconciliated by the bank, which often happens at the
+  end of a day.
+  Successful revoke operations are invisible in card statement.
+
+  **Some regulations applied by banks on transactions might restrict
+  cancellation operations.**
+
+  Refund operations could also be performed in order to pay back specified
+  amount of funds and can be performed in any time, without any restrictions.
+  Merchants are able to refund up to full amount of the transaction, and
+  able to do it with proportions of the amount.
+  Multiple refund operations could be performed by making sequential calls.
+
   ## Discussion
 
-  Although utilization of *3D secure* featured transactions become overwhelming in terms of duration of the payment
-  it is highly discouraged to perform insecure transactions directly, especially without concerning about customer's
+  Although utilization of *3D secure* featured transactions become overwhelming
+  in terms of duration of the payment it is highly discouraged to perform
+  insecure transactions directly, especially without concerning about customer's
   consent.
-  Secure transactions involve two-factor authentication provided by associations, hence displacing the responsibility of
-  the developer to be not concerned about authenticity of the credit card information.
+  Secure transactions involve two-factor authentication provided by
+  associations, hence displacing the responsibility of
+  the developer to be not concerned about authenticity of the credit card
+  information.
 
   ## Common options
 
-  - `:api_key`: API key to be used in authentication, optional. Configuration is used instead if not supplied.
+  - `:api_key`: API key to be used in authentication, optional. Configuration
+  is used instead if not supplied.
 
-  - `:api_secret`: API secret key to be used in authentication. Configuration is used instead if not supplied.
+  - `:api_secret`: API secret key to be used in authentication. Configuration
+  is used instead if not supplied.
   """
   import Iyzico.Client
+  import Iyzico.CompileTime
 
   alias Iyzico.Payment
   alias Iyzico.Transaction
@@ -109,6 +142,13 @@ defmodule Iyzico.Iyzipay do
   alias Iyzico.Card
   alias Iyzico.CardReference
   alias Iyzico.SecurePaymentArtifact
+  alias Iyzico.RevokePaymentRequest
+  alias Iyzico.RefundPaymentRequest
+
+  @type currency :: :try
+
+  @server_ip Keyword.get(Application.get_env(:iyzico, Iyzico), :server_ip, nil)
+  static_assert_tuple(@server_ip)
 
   @doc """
   Processes the given payment request on the remote API.
@@ -132,7 +172,8 @@ defmodule Iyzico.Iyzipay do
   end
 
   @doc """
-  Same as `process_payment_req/1`, but raises an `Iyzico.PaymentProcessingError` exception in case of failure.
+  Same as `process_payment_req/1`, but raises an
+  `Iyzico.PaymentProcessingError` exception in case of failure.
   Otherwise returns successfully processed payment.
   """
   def process_payment_req!(payment = %Iyzico.PaymentRequest{}, opts \\ []) do
@@ -197,7 +238,125 @@ defmodule Iyzico.Iyzipay do
     end
   end
 
+  @doc """
+  Revokes an existing payment on the remote API.
+  Returns `{:error, :unowned}` if payment is not owned by the API user.
+
+  ## Options
+
+  See common options.
+  """
+  @spec revoke_payment(binary, binary, Keyword.t) ::
+    {:ok, Iyzico.Metadata.t} |
+    {:error, :unowned}
+  def revoke_payment(payment_id, conversation_id, opts \\ [])
+    when is_binary(payment_id) and is_binary(conversation_id) do
+    revoke = %RevokePaymentRequest{
+      conversation_id: conversation_id,
+      payment_id: payment_id,
+      ip: @server_ip
+    }
+
+    case request([], :post, url_for_path("/payment/cancel"), [], revoke, opts) do
+      {:ok, resp} ->
+        if resp["status"] == "success" do
+          metadata =
+            %Metadata{
+              system_time: resp["systemTime"],
+              succeed?: resp["status"] == "success",
+              phase: resp["phase"],
+              locale: resp["locale"],
+              auth_code: resp["authCode"]}
+
+          {:ok, metadata}
+        else
+          handle_error(resp)
+        end
+      any ->
+        any
+    end
+  end
+
+  @doc """
+  Same as `revoke_payment/3`, but raises `Iyzico.InternalInconsistencyError` if
+  there was an error.
+  """
+  @spec revoke_payment!(binary, binary, Keyword.t) ::
+    Iyzico.Metadata.t |
+    no_return
+  def revoke_payment!(payment_id, conversation_id, opts \\ []) do
+    case revoke_payment(payment_id, conversation_id, opts) do
+      {:ok, metadata} ->
+        metadata
+      {:error, code} ->
+        raise Iyzico.InternalInconsistencyError, code: code
+    end
+  end
+
+
+  @doc """
+  Refunds a payment of a successful transaction by given amount.
+
+  ## Options
+
+  See common options.
+  """
+  @spec refund_payment(binary, binary, binary, currency, Keyword.t) ::
+    {:ok, Iyzico.Metadata.t} |
+    {:error, :excessive_funds} |
+    {:error, :unowned}
+  def refund_payment(transaction_id, conversation_id, price, currency, opts \\ [])
+    when is_binary(transaction_id) and is_binary(conversation_id) and
+         is_binary(price) do
+    refund =
+      %RefundPaymentRequest{
+        conversation_id: conversation_id,
+        transaction_id: transaction_id,
+        price: price,
+        ip: @server_ip,
+        currency: currency
+      }
+
+    case request([], :post, url_for_path("/payment/refund"), [], refund, opts) do
+      {:ok, resp} ->
+        if resp["status"] == "success" do
+          metadata =
+            %Metadata{
+              system_time: resp["systemTime"],
+              succeed?: resp["status"] == "success",
+              phase: resp["phase"],
+              locale: resp["locale"],
+              auth_code: resp["authCode"]}
+
+          {:ok, metadata}
+        else
+          handle_error(resp)
+        end
+      any ->
+        any
+    end
+  end
+
+  @doc """
+  Same as `refund_payment/5`, but raises `Iyzico.InternalInconsistencyError` if
+  there was an error.
+  """
+  @spec refund_payment!(binary, binary, binary, currency, Keyword.t) ::
+    Iyzico.Metadata.t |
+    no_return
+  def refund_payment!(transaction_id, conversation_id, price, currency, opts \\ []) do
+    case refund_payment(transaction_id, conversation_id, price, currency, opts) do
+      {:ok, metadata} ->
+        metadata
+      {:error, code} ->
+        raise Iyzico.InternalInconsistencyError, code: code
+    end
+  end
+
+  defp handle_error(%{"errorCode" => "5093"}), do: {:error, :excessive_funds}
   defp handle_error(%{"errorCode" => "5115"}), do: {:error, :unavail}
+  defp handle_error(%{"errorCode" => "5086"}), do: {:error, :unowned}
+  defp handle_error(%{"errorCode" => "5092"}), do: {:error, :unowned}
   defp handle_error(%{"errorCode" => "10051"}), do: {:error, :insufficient_funds}
   defp handle_error(%{"errorCode" => "10005"}), do: {:error, :do_not_honor}
   defp handle_error(%{"errorCode" => "10057"}), do: {:error, :holder_permit}

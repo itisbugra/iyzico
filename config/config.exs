@@ -25,7 +25,8 @@ config :iyzico, Iyzico,
   api_key: "sandbox-qO7nc7SfZobKsgQq81r518pEnfg6FJQE",
   api_secret: "sandbox-OFVrJ1h8QM8xq8BMTKBiZUa92JcD2B8g",
   world: :sandbox,
-  base_url: "https://sandbox-api.iyzipay.com"
+  base_url: "https://sandbox-api.iyzipay.com",
+  server_ip: {69, 27, 28, 29}
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment

@@ -11,6 +11,15 @@ defmodule Iyzico.IyzipayErrorsTest do
   @current_locale Application.get_env(:iyzico, Iyzico)[:locale]
 
   setup do
+    card =
+      %Card{
+        holder_name: "John Doe",
+        number: "5528790000000008",
+        exp_month: 12,
+        exp_year: 2030,
+        cvc: 123
+      }
+
     buyer =
       %Buyer{
         id: "BY789",
@@ -46,7 +55,7 @@ defmodule Iyzico.IyzipayErrorsTest do
         country: "Turkey"
       }
 
-    items = [
+    binocular_item =
       %BasketItem{
         id: "BI101",
         name: "Binocular",
@@ -54,7 +63,10 @@ defmodule Iyzico.IyzipayErrorsTest do
         subcategory: "Accessories",
         type: :physical,
         price: "0.3"
-      }, %BasketItem{
+      }
+
+    game_item =
+      %BasketItem{
         id: "BI103",
         name: "USB",
         category: "Electronics",
@@ -62,11 +74,15 @@ defmodule Iyzico.IyzipayErrorsTest do
         type: :physical,
         price: "0.2"
       }
-    ]
-    
-    %{buyer: buyer, shipping_address: shipping_address, billing_address: billing_address, items: items}
+
+    {:ok, %{card: card,
+            buyer: buyer,
+            shipping_address: shipping_address,
+            billing_address: billing_address,
+            binocular_item: binocular_item,
+            game_item: game_item}}
   end
-  
+
   describe "erroneous cards" do
     test "insufficient funds", setup, do: assert gen_request(setup, "4111111111111129") == {:error, :insufficient_funds}
     test "do not honor", setup, do: assert gen_request(setup, "4129111111111111") == {:error, :do_not_honor}
@@ -81,7 +97,7 @@ defmodule Iyzico.IyzipayErrorsTest do
     test "pickup", setup, do: assert gen_request(setup, "4120111111111110") == {:error, :stolen}
     test "generic error", setup, do: assert gen_request(setup, "4130111111111118") == {:error, nil}
   end
-  
+
   defp gen_request(setup, number) do
     card =
       %Card{
@@ -91,7 +107,7 @@ defmodule Iyzico.IyzipayErrorsTest do
         exp_year: 2030,
         cvc: 123
       }
-    
+
     payment_request =
       %PaymentRequest{
         locale: @current_locale,
@@ -107,9 +123,52 @@ defmodule Iyzico.IyzipayErrorsTest do
         buyer: setup.buyer,
         shipping_address: setup.shipping_address,
         billing_address: setup.billing_address,
-        basket_items: setup.items
+        basket_items: [setup.binocular_item, setup.game_item]
       }
-      
+
     Iyzico.Iyzipay.process_payment_req(payment_request)
+  end
+
+  test "does not cancel a non-existent payment" do
+    assert Iyzico.Iyzipay.revoke_payment("-1", "123456789") == {:error, :unowned}
+  end
+
+  test "does not refund a non-existent payment" do
+    assert Iyzico.Iyzipay.refund_payment("-1", "123456789", "1.0", :try) == {:error, :unowned}
+  end
+
+  test "does not refund more than transaction value", %{card: card,
+                                                        buyer: buyer,
+                                                        shipping_address: shipping_address,
+                                                        billing_address: billing_address,
+                                                        binocular_item: binocular_item,
+                                                        game_item: game_item} do
+    payment_request =
+      %PaymentRequest{
+        locale: @current_locale,
+        conversation_id: "123456789",
+        price: "0.5",
+        paid_price: "0.7",
+        currency: :try,
+        basket_id: "B67832",
+        payment_channel: :web,
+        payment_group: :product,
+        payment_card: card,
+        installment: 1,
+        buyer: buyer,
+        shipping_address: shipping_address,
+        billing_address: billing_address,
+        basket_items: [
+          binocular_item,
+          game_item
+        ]
+      }
+
+    {:ok, payment, _metadata} =
+      Iyzico.Iyzipay.process_payment_req(payment_request)
+
+    transaction = Enum.at(payment.transactions, 0)
+
+    assert Iyzico.Iyzipay.refund_payment(transaction.id, "123456789", "1.0", :try) == {:error, :excessive_funds}
   end
 end
