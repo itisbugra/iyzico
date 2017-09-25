@@ -40,7 +40,7 @@ config :iyzico, Iyzico,
   api_secret: "sandbox-OFVrJ1h8QM8xq8BMTKBiZUa92JcD2B8g",
   world: :sandbox,
   base_url: "https://sandbox-api.iyzipay.com",
-  ip: {67, 43, 43, 43}
+  server_ip: {67, 43, 43, 43}
 ```
 
 ## Contribution
