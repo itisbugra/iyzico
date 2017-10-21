@@ -190,7 +190,7 @@ defmodule Iyzico.Card do
         :maximum
       "Paraf" ->
         :paraf
-      "CardFinans" ->
+      "Cardfinans" ->
         :cardfinans
       "Advantage" ->
         :advantage
