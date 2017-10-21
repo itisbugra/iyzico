@@ -144,7 +144,7 @@ defmodule Iyzico.Card do
       iex> Iyzico.Card.get_card_family "Paraf"
       :paraf
 
-      iex> Iyzico.Card.get_card_family "CardFinans"
+      iex> Iyzico.Card.get_card_family "Cardfinans"
       :cardfinans
 
       iex> Iyzico.Card.get_card_family "Advantage"
