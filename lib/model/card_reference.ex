@@ -25,7 +25,7 @@ defmodule Iyzico.CardReference do
     user_key: binary,
     token: binary,
     email: binary,
-    card: Iyzico.Card.t,
+    card: Iyzico.Card.t | Iyzico.RegisteredCard.t,
     type: Iyzico.Card.card_type,
     assoc: Iyzico.Card.card_assoc,
     family: Iyzico.Card.card_family,

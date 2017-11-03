@@ -8,6 +8,7 @@ defmodule Iyzico.IyzipayTest do
   alias Iyzico.BasketItem
   alias Iyzico.Buyer
   alias Iyzico.Card
+  alias Iyzico.RegisteredCard
   alias Iyzico.PaymentRequest
   alias Iyzico.SecurePaymentRequest
   alias Iyzico.SecurePaymentHandle
@@ -93,6 +94,58 @@ defmodule Iyzico.IyzipayTest do
     assert is_tuple(result)
     assert elem(result, 0) == :ok
     assert is_integer(elem(result, 1))
+  end
+
+  test "completes a checkout with registered card", %{buyer: buyer,
+                                                      shipping_address: shipping_address,
+                                                      billing_address: billing_address,
+                                                      binocular_item: binocular_item,
+                                                      game_item: game_item} do
+    card =
+      %Card{
+        holder_name: "Buğra Ekuklu",
+        number: "5528790000000008",
+        exp_year: 19,
+        exp_month: 08,
+        cvc: 543,
+        registration_alias: "Buğra's credit card"
+      }
+
+    {:ok, card, metadata} =
+      Iyzico.CardRegistration.create_card(card, "external_id", "conversation_id", "test@mail.com")
+
+    assert metadata.succeed?
+
+    card = %RegisteredCard{
+      user_key: card.user_key,
+      token: card.token
+    }
+
+    payment_request =
+      %PaymentRequest{
+        locale: @current_locale,
+        conversation_id: "123456789",
+        price: "0.5",
+        paid_price: "0.7",
+        currency: :try,
+        basket_id: "B67832",
+        payment_channel: :web,
+        payment_group: :product,
+        payment_card: card,
+        installment: 1,
+        buyer: buyer,
+        shipping_address: shipping_address,
+        billing_address: billing_address,
+        basket_items: [
+          binocular_item,
+          game_item
+        ]
+      }
+
+    {:ok, payment, metadata} = Iyzico.Iyzipay.process_payment_req(payment_request)
+
+    assert metadata.succeed?
+    assert payment
   end
 
   test "completes a checkout", %{card: card,
