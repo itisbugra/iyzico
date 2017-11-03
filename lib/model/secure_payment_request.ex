@@ -30,12 +30,12 @@ defmodule Iyzico.SecurePaymentRequest do
   Represents currency of the candidate payment.
   """
   @type currency :: :try
-  
+
   @typedoc """
   Represents channel of the candidate payment.
   """
   @type payment_channel :: :web
-  
+
   @typedoc """
   Represents group of the candidate payment.
   """
@@ -43,7 +43,7 @@ defmodule Iyzico.SecurePaymentRequest do
 
   @typedoc """
   Represents a secure payment request.
-  
+
   The only difference of this struct from `Iyzico.PaymentRequest.t` struct is `callback_url` field.
   """
   @type t :: %__MODULE__{
@@ -56,7 +56,7 @@ defmodule Iyzico.SecurePaymentRequest do
     basket_id: binary,
     payment_channel: payment_channel,
     payment_group: payment_group,
-    payment_card: Iyzico.Card.t,
+    payment_card: Iyzico.Card.t | Iyzico.RegisteredCard.t,
     buyer: Iyzico.Buyer.t,
     shipping_address: Iyzico.Address.t,
     billing_address: Iyzico.Address.t,

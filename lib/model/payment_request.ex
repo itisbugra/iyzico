@@ -1,7 +1,7 @@
 defmodule Iyzico.PaymentRequest do
   @typedoc """
   Represents a payment request information.
-  
+
   For *3D Secure* enhanced payment operations, navigate to `Iyzico.SecurePaymentRequest`.
   """
   @enforce_keys ~w(conversation_id price
@@ -40,7 +40,7 @@ defmodule Iyzico.PaymentRequest do
     basket_id: binary,
     payment_channel: payment_channel,
     payment_group: payment_group,
-    payment_card: Iyzico.Card.t,
+    payment_card: Iyzico.Card.t | Iyzico.RegisteredCard.t,
     buyer: Iyzico.Buyer.t,
     shipping_address: Iyzico.Address.t,
     billing_address: Iyzico.Address.t,
