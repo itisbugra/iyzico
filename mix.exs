@@ -47,6 +47,6 @@ defmodule Iyzico.Mixfile do
      {:luhn, "~> 0.3.1"},
      {:ex_doc, ">= 0.0.0", only: :dev},
      {:excoveralls, "~> 0.7.2", only: :test},
-     {:inch_ex, only: :docs}]
+     {:inch_ex, "~> 0.5.6", only: :docs}]
   end
 end
