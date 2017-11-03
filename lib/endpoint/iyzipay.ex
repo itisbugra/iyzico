@@ -140,7 +140,6 @@ defmodule Iyzico.Iyzipay do
   alias Iyzico.ConvertedPayout
   alias Iyzico.Metadata
   alias Iyzico.Card
-  alias Iyzico.RegisteredCard
   alias Iyzico.CardReference
   alias Iyzico.SecurePaymentArtifact
   alias Iyzico.RevokePaymentRequest
