@@ -3,7 +3,7 @@ defmodule Iyzico.Mixfile do
 
   def project do
     [app: :iyzico,
-     version: "1.5.6",
+     version: "1.6.0",
      elixir: "~> 1.4",
      elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
