@@ -5,6 +5,7 @@ defmodule Iyzico.CardRegistration do
   """
   import Iyzico.Client
 
+  alias Iyzico.AddCardRegistrationRequest
   alias Iyzico.CardRegistrationRequest
   alias Iyzico.CardReference
   alias Iyzico.CardRetrieval
@@ -12,6 +13,65 @@ defmodule Iyzico.CardRegistration do
   alias Iyzico.Metadata
 
   @default_locale Keyword.get(Application.get_env(:iyzico, Iyzico), :locale, "en")
+
+  @doc """
+  Stores a card with a given user key identifier. One can later retrieve or refer
+  to the given card with that identifier.
+  """
+  @spec add_create_card(Iyzico.Card.t, binary, binary, Keyword.t) ::
+    {:ok, Iyzico.CardReference.t, Iyzico.Metadata.t} |
+    {:error, :invalid_card}
+  def add_create_card(card = %Iyzico.Card{}, conversation_id, card_user_key, opts \\ []) do
+    add_registration =
+      %AddCardRegistrationRequest{
+        locale: @default_locale,
+        conversation_id: conversation_id,
+        card_user_key: card_user_key,
+        card: card
+      }
+
+    if Luhn.valid? add_registration.card.number do
+      case request([], :post, url_for_path("/cardstorage/card"), [], add_registration, opts) do
+        {:ok, resp} ->
+          card_ref =
+            %CardReference{
+              user_key: resp["cardUserKey"],
+              token: resp["cardToken"],
+              alias: resp["cardAlias"],
+              card: card,
+              type: Iyzico.Card.get_card_type(resp["cardType"]),
+              assoc: Iyzico.Card.get_card_assoc(resp["cardAssociation"]),
+              family: Iyzico.Card.get_card_family(resp["cardFamily"]),
+              bank_name: resp["cardBankName"],
+              email: resp["email"]
+            }
+
+          metadata =
+            %Metadata{
+              system_time: resp["systemTime"],
+              succeed?: resp["status"] == "success",
+              phase: nil,
+              locale: resp["locale"],
+              auth_code: nil
+            }
+
+          {:ok, card_ref, metadata}
+        any ->
+          any
+      end
+    else
+      {:error, :invalid_card}
+    end
+  end
+
+  def add_create_card!(card = %Iyzico.Card{}, conversation_id, card_user_key) do
+    case add_create_card(card, conversation_id, card_user_key) do
+      {:ok, card_ref, _metadata} ->
+        card_ref
+      {:error, error} ->
+        raise Iyzico.CardRegistrationError, message: error
+    end
+  end
 
   @doc """
   Stores a card with given external identifier. One can later retrieve or refer

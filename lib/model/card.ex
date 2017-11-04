@@ -198,6 +198,8 @@ defmodule Iyzico.Card do
         :neo
       "Denizbank DC" ->
         :denizbank
+      "Denizbank CC" ->
+        :denizbank
       "Cardfinans DC" ->
         :cardfinans
       "Halkbank DC" ->
