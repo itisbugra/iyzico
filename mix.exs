@@ -3,7 +3,7 @@ defmodule Iyzico.Mixfile do
 
   def project do
     [app: :iyzico,
-     version: "1.6.0",
+     version: "1.6.1-rc1",
      elixir: "~> 1.4",
      elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
@@ -12,7 +12,7 @@ defmodule Iyzico.Mixfile do
      test_coverage: [tool: ExCoveralls],
      package: [
        name: :iyzico,
-       maintainers: ["Buğra Ekuklu", "Abdulkadir Dilsiz", "Fatih Demirel"],
+       maintainers: ["Buğra Ekuklu", "Abdulkadir Dilsiz"],
        licenses: ["MIT"],
        links: %{github: "https://github.com/chatatata/iyzico"}
      ],
