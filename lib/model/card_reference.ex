@@ -14,7 +14,9 @@ defmodule Iyzico.CardReference do
     :type,
     :assoc,
     :family,
-    :bank_name
+    :bank_name,
+    :bank_code,
+    :bin_number
   ]
 
   @typedoc """
@@ -29,6 +31,8 @@ defmodule Iyzico.CardReference do
     type: Iyzico.Card.card_type,
     assoc: Iyzico.Card.card_assoc,
     family: Iyzico.Card.card_family,
-    bank_name: binary
+    bank_name: binary,
+    bank_code: number,
+    bin_number: binary
   }
 end

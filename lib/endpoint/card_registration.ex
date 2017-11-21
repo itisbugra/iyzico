@@ -206,7 +206,9 @@ defmodule Iyzico.CardRegistration do
               type: Iyzico.Card.get_card_type(element["cardType"]),
               family: Iyzico.Card.get_card_family(element["cardFamily"]),
               token: element["cardToken"],
-              user_key: resp["cardUserKey"]
+              user_key: resp["cardUserKey"],
+              bank_code: element["cardBankCode"],
+              bin_number: element["binNumber"]
             }
           end)
 
