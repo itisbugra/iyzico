@@ -53,5 +53,5 @@ defmodule Iyzico.ErrorHandler do
   def handle_error(%{"errorCode" => "10214"}), do: {:error, nil}
   def handle_error(%{"errorCode" => "10202"}), do: {:error, nil}
   def handle_error(%{"errorCode" => "10204"}), do: {:error, nil}
-  def handle_error(_), do: raise Iyzico.InternalInconsistencyError
+  def handle_error(%{"errorCode" => code}), do: raise Iyzico.InternalInconsistencyError, code: code
 end

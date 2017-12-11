@@ -1,8 +1,8 @@
 defmodule Iyzico.InternalInconsistencyError do
-  defexception [:reason]
+  defexception [:reason, :code]
 
-  def exception(reason) do
-    %Iyzico.InternalInconsistencyError{reason: reason}
+  def exception(reason, code) do
+    %Iyzico.InternalInconsistencyError{reason: reason, code: code}
   end
 
   def message(_exception) do
