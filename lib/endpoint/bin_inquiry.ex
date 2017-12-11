@@ -68,6 +68,7 @@ defmodule Iyzico.BinInquiry do
 
   import Iyzico.Client
   import Iyzico.Card
+  import Iyzico.ErrorHandler
 
   alias Iyzico.InquiryResult
   alias Iyzico.Metadata
@@ -167,7 +168,4 @@ defmodule Iyzico.BinInquiry do
 
     {:ok, result, metadata}
   end
-
-  defp handle_error(%{"errorCode" => "5184"}), do: {:error, :local_card_on_foreign_cur}
-  defp handle_error(_), do: raise Iyzico.InternalInconsistencyError
 end

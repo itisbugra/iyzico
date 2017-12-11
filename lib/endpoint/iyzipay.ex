@@ -134,6 +134,7 @@ defmodule Iyzico.Iyzipay do
   """
   import Iyzico.Client
   import Iyzico.CompileTime
+  import Iyzico.ErrorHandler
 
   alias Iyzico.Payment
   alias Iyzico.Transaction
@@ -352,22 +353,6 @@ defmodule Iyzico.Iyzipay do
         raise Iyzico.InternalInconsistencyError, code: code
     end
   end
-
-  defp handle_error(%{"errorCode" => "5093"}), do: {:error, :excessive_funds}
-  defp handle_error(%{"errorCode" => "5115"}), do: {:error, :unavail}
-  defp handle_error(%{"errorCode" => "5086"}), do: {:error, :unowned}
-  defp handle_error(%{"errorCode" => "5092"}), do: {:error, :unowned}
-  defp handle_error(%{"errorCode" => "10051"}), do: {:error, :insufficient_funds}
-  defp handle_error(%{"errorCode" => "10005"}), do: {:error, :do_not_honor}
-  defp handle_error(%{"errorCode" => "10057"}), do: {:error, :holder_permit}
-  defp handle_error(%{"errorCode" => "10058"}), do: {:error, :terminal}
-  defp handle_error(%{"errorCode" => "6001"}), do: {:error, :stolen}
-  defp handle_error(%{"errorCode" => "10034"}), do: {:error, :fraud}
-  defp handle_error(%{"errorCode" => "10054"}), do: {:error, :expired}
-  defp handle_error(%{"errorCode" => "10084"}), do: {:error, :invalid_cvc}
-  defp handle_error(%{"errorCode" => "10012"}), do: {:error, :invalid}
-  defp handle_error(%{"errorCode" => "10202"}), do: {:error, nil}
-  defp handle_error(_), do: raise Iyzico.InternalInconsistencyError
 
   defp serialize_resp(resp) do
     transactions =
