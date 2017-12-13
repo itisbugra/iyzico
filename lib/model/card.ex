@@ -176,6 +176,9 @@ defmodule Iyzico.Card do
 
       iex> Iyzico.Card.get_card_family "Paracard"
       :garanti
+
+      iex> Iyzico.Card.get_card_family "Miles&Smiles"
+      :miles_smiles
   """
   @spec get_card_family(String.t) :: card_family
   def get_card_family(family) do
@@ -214,6 +217,8 @@ defmodule Iyzico.Card do
         :hsbc
       "Paracard" ->
         :garanti
+      "Miles&Smiles" ->
+        :miles_smiles
     end
   end
 end
