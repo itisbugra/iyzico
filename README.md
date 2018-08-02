@@ -2,8 +2,6 @@
 
 A minimal *iyzico* client.
 
-###### Currently maintained by [@heybuybuddy](https://github.com/heybuybuddy/).
-
 [![Build Status](https://travis-ci.org/Chatatata/iyzico.svg?branch=master)](https://travis-ci.org/Chatatata/iyzico)
 [![Hex.pm](https://img.shields.io/hexpm/v/iyzico.svg)](https://hex.pm/packages/iyzico)
 [![Hexdocs.pm](https://img.shields.io/badge/hexdocs-available-a5439a.svg)](https://hexdocs.pm/iyzico/)
